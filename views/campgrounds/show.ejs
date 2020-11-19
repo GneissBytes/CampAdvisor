@@ -1,0 +1,14 @@
+<% layout('./layouts/boilerplate') %>
+<h1><%= campground.title %> </h1>
+<h4><%= campground.location %> </h4>
+<h4>$<%= campground.price %> </h4>
+<img src="<%= campground.image %> ">
+<p><% if (!campground.description) { %>
+    No descripiont yet!
+    <% } else {%>
+    <%= campground.description %>
+    <% } %>
+</p>
+<br>
+<a href="/campgrounds"><button class="btn">Go back</button></a>
+<a href="/campgrounds/<%= campground._id %>/edit"><button class="btn">Edit campground</button></a>

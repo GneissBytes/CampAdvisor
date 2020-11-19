@@ -1,0 +1,22 @@
+<% layout('./layouts/boilerplate') %>
+<h1>Create a new campground</h1>
+<form action="/campgrounds" method="POST">
+    <div>
+        <label for="campground[title]">Camp title</label>
+        <input name="campground[title]" type="text" placeholder="Campy Camp" required>
+    </div>
+    <div>
+        <label for="campground[location]">Camp location</label>
+        <input name="campground[location]" type="text" placeholder="Placy Place" required>
+    </div>
+    <div><label for="campground[price]">Price per night</label>
+        <input name="campground[price]" type="text" placeholder="Pricy pice" required>
+    </div>
+    <div>
+        <label for="campground[description]">Camp description</label>
+        <textarea cols="30" , rows="5" name="campground[description]" type="text"
+            placeholder="Describy description"></textarea>
+    </div>
+    <button type="submit" class="btn btn-success">Submit camp</button>
+</form>
+<a href="/campgrounds"><button class="btn">Go back</button></a>

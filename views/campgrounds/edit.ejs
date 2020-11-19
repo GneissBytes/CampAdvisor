@@ -1,0 +1,29 @@
+<% layout('./layouts/boilerplate') %>
+    <h1>Edit campground</h1>
+    <div class="forms">
+        <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="POST">
+            <div>
+                <label for="newDetails[title]">Camp title</label>
+                <input name="newDetails[title]" type="text" value="<%= campground.title %> ">
+            </div>
+            <div>
+                <label for="newDetails[location]">Camp location</label>
+                <input name="newDetails[location]" type="text" value="<%= campground.location %> " required>
+            </div>
+            <div><label for="newDetails[price]">Price per night</label>
+                <input name="newDetails[price]" type="text" value="<%= campground.price %> " required>
+            </div>
+            <div>
+                <label for="newDetails[description]">Camp description</label>
+                <textarea cols="30" rows="5" name="newDetails[description]"
+                    type="text"><%= campground.description %></textarea>
+            </div>
+            <button type="submit">Submit changes</button>
+        </form>
+        <form action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST"
+            onsubmit="return confirm(`Are you sure you want to remove campground <%= campground.title %>?`)">
+            <button type="submit" class="btn">Remove this campground</button>
+        </form>
+    <a href="/campgrounds"><button class="btn">Go back home</button></a>
+    <a href="/campgrounds/<%= campground._id %> "><button class="btn">Go to <%= campground.title %> </button></a>
+</div>
