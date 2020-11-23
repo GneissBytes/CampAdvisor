@@ -1,22 +1,57 @@
 <% layout('./layouts/boilerplate') %>
-<h1>Create a new campground</h1>
-<form action="/campgrounds" method="POST">
-    <div>
-        <label for="campground[title]">Camp title</label>
-        <input name="campground[title]" type="text" placeholder="Campy Camp" required>
+<div class="row mb-3">
+    <h1 class="text-center mb-5">New Campground</h1>
+    <div class="col-6 offset-3">
+        <form action="/campgrounds" method="POST" novalidate class="validated-form">
+            <div class="form-group">
+                <label for="title" class="form-label">Title</label>
+                <input type="text" name="campground[title]" class="form-control" required>
+                <div class="valid-feedback">Great name!</div>
+                <div class="invalid-feedback">Name required!</div>
+            </div>
+            <div class="form-group">
+                <label for="location" class="form-label">Location</label>
+                <input type="text" name="campground[location]" class="form-control" required>
+                <div class="valid-feedback">Interesting location!</div>
+                <div class="invalid-feedback">Please input location!</div>
+            </div>
+            <div>
+                <label for="campground[price]" class="form-label" style="display:block">Price</label>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">$</span>
+                </div>
+                <input type="number" min="0" step="0.01" name="campground[price]" class="form-control" required>
+                <div class="valid-feedback">Price checks out!</div>
+                <div class="invalid-feedback">Please enter correct price!</div>
+            </div>
+            <div class="form-group">
+                <div class="rounded img-thumbnail" style="width: 100%;max-height: 40%;">
+                    <img id="campImg" style="width:100%">
+                </div>
+                <label for="newDetails[image]" class="form-label">Image</label>
+                <input id="imglink" type="text" name="campground[image]" class="form-control" required>
+                <div class="valid-feedback">Image loaded!</div>
+                <div class="invalid-feedback">Enter image!</div>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea class="form-control" name="campground[description]" rows="5" style="resize: none;"
+                    required></textarea>
+                <div class="valid-feedback">Fine description!</div>
+                <div class="invalid-feedback">Please enter camp description!</div>
+            </div>
+            <button type="submit" class="btn btn-info">Submit new camp</button>
+        </form>
     </div>
-    <div>
-        <label for="campground[location]">Camp location</label>
-        <input name="campground[location]" type="text" placeholder="Placy Place" required>
-    </div>
-    <div><label for="campground[price]">Price per night</label>
-        <input name="campground[price]" type="text" placeholder="Pricy pice" required>
-    </div>
-    <div>
-        <label for="campground[description]">Camp description</label>
-        <textarea cols="30" , rows="5" name="campground[description]" type="text"
-            placeholder="Describy description"></textarea>
-    </div>
-    <button type="submit" class="btn btn-success">Submit camp</button>
-</form>
-<a href="/campgrounds"><button class="btn">Go back</button></a>
+</div>
+<script>
+    const imgLink = document.querySelector('#imglink');
+    const campImg = document.querySelector("#campImg");
+    imgLink.addEventListener("change", () => {
+        campImg.src = imgLink.value;
+    })
+</script>
+
+<script src="/js/formValidation.js"></script>

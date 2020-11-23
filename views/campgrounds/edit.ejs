@@ -1,29 +1,75 @@
 <% layout('./layouts/boilerplate') %>
-    <h1>Edit campground</h1>
-    <div class="forms">
-        <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="POST">
-            <div>
-                <label for="newDetails[title]">Camp title</label>
-                <input name="newDetails[title]" type="text" value="<%= campground.title %> ">
+<div class="row mb-3">
+    <h1 class="text-center mb-5">Edit Campground <%= campground.title %> </h1>
+    <div class="col-6 offset-3">
+        <form id="campedit" action="/campgrounds/<%= campground._id %>?_method=PUT" method="POST" class="validated-form"
+            novalidate>
+            <div class="valid-feedback">Great new name!</div>
+            <div class="invalid-feedback">Name required!</div>
+            <div class="form-group">
+                <label for="newDetails[title]" class="form-label">Title</label>
+                <input type="text" name="newDetails[title]" class="form-control" value="<%= campground.title %>"
+                    required>
+                <div class="valid-feedback">Great new name!</div>
+                <div class="invalid-feedback">Please enter name!</div>
+
+            </div>
+            <div class="form-group">
+                <label for="newDetails[location]" class="form-label">Location</label>
+                <input type="text" name="newDetails[location]" class="form-control" value="<%= campground.location %>"
+                    required>
+                <div class="valid-feedback">Interesting new location!</div>
+                <div class="invalid-feedback">Please input location!</div>
             </div>
             <div>
-                <label for="newDetails[location]">Camp location</label>
-                <input name="newDetails[location]" type="text" value="<%= campground.location %> " required>
+                <label for="newDetails[price]" class="form-label" style="display:block">Price</label>
+
             </div>
-            <div><label for="newDetails[price]">Price per night</label>
-                <input name="newDetails[price]" type="text" value="<%= campground.price %> " required>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">$</span>
+                </div>
+                <input type="number" min="0" step="0.01" name="newDetails[price]" class="form-control"
+                    value="<%= campground.price  %>" required>
+                <div class="valid-feedback">New price checks out!</div>
+                <div class="invalid-feedback">Please enter correct price!</div>
             </div>
-            <div>
-                <label for="newDetails[description]">Camp description</label>
-                <textarea cols="30" rows="5" name="newDetails[description]"
-                    type="text"><%= campground.description %></textarea>
+
+
+            <div class="form-group">
+                <div class="rounded img-thumbnail" style="width: 100%;max-height: 40%;">
+                    <img id="campImg" src="<%= campground.image %>" style="width:100%">
+                </div>
+                <label for="newDetails[image]" class="form-label">Image</label>
+                <input id="imglink" type="text" name="newDetails[image]" class="form-control"
+                    value="<%= campground.image %>" required>
+                <div class="valid-feedback">New image loaded!</div>
+                <div class="invalid-feedback">Enter image!</div>
             </div>
-            <button type="submit">Submit changes</button>
+            <div class="form-group">
+                <label for="newDetails[description]">Description</label>
+                <textarea class="form-control" name="newDetails[description]" rows="5"
+                    style="resize: none;"><%=campground.description %></textarea>
+                <div class="valid-feedback">Fine new description!</div>
+                <div class="invalid-feedback">Please enter camp description!</div>
+            </div>
+            <button type="submit" class="btn btn-info">Submit changes</button>
         </form>
-        <form action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST"
-            onsubmit="return confirm(`Are you sure you want to remove campground <%= campground.title %>?`)">
-            <button type="submit" class="btn">Remove this campground</button>
-        </form>
-    <a href="/campgrounds"><button class="btn">Go back home</button></a>
-    <a href="/campgrounds/<%= campground._id %> "><button class="btn">Go to <%= campground.title %> </button></a>
+        <div class="container mt-5">
+            <a href="/campgrounds/<%= campground._id %> " class="btn btn-secondary">Go back</a>
+            <form action="/campgrounds/<%= campground._id %>?_method=DELETE" style="display: inline" method="POST"
+                onsubmit="return confirm('Are you sure you want to delete campground <%= campground.title %>?')">
+                <button class="btn btn-danger">Delete this campground</button>
+            </form>
+        </div>
+    </div>
 </div>
+<script>
+    const imgLink = document.querySelector('#imglink');
+    const campImg = document.querySelector("#campImg");
+    imgLink.addEventListener("change", () => {
+        campImg.src = imgLink.value;
+    })
+</script>
+
+<script src="/js/formValidation.js"></script>

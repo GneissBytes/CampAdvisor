@@ -1,14 +1,26 @@
 <% layout('./layouts/boilerplate') %>
-<h1><%= campground.title %> </h1>
-<h4><%= campground.location %> </h4>
-<h4>$<%= campground.price %> </h4>
-<img src="<%= campground.image %> ">
-<p><% if (!campground.description) { %>
-    No descripiont yet!
-    <% } else {%>
-    <%= campground.description %>
-    <% } %>
-</p>
-<br>
-<a href="/campgrounds"><button class="btn">Go back</button></a>
-<a href="/campgrounds/<%= campground._id %>/edit"><button class="btn">Edit campground</button></a>
+
+
+<div class="row">
+    <div class="col-6 offset-3 mb-5">
+        <div class="card">
+            <img class="card-img-top" src="<%= campground.image %> " alt="<%= campground.title %> ">
+            <div class="card-body">
+                <h5 class="card-title"><%= campground.title %> </h5>
+                <p class="card-text"><%= campground.description %> </p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item text-muted"><%= campground.location %> </li>
+                <li class="list-group-item text-muted">Price: $<%= campground.price %> </li>
+
+            </ul>
+            <div class="card-body">
+                <a href="/campgrounds" card-link"><button class="btn btn-secondary">Go back</button> </a>
+                <a href="/campgrounds/<%= campground._id %>/edit" class="btn btn-warning">Edit campground</a>
+            </div>
+            <div class="card-footer text-muted">
+                <%= Math.floor(Math.random()*365)+1 %> days ago
+            </div>
+        </div>
+    </div>
+</div>
