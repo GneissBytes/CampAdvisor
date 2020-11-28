@@ -7,29 +7,29 @@
             <div class="valid-feedback">Great new name!</div>
             <div class="invalid-feedback">Name required!</div>
             <div class="form-group">
-                <label for="newDetails[title]" class="form-label">Title</label>
-                <input type="text" name="newDetails[title]" class="form-control" value="<%= campground.title %>"
+                <label for="campground[title]" class="form-label">Title</label>
+                <input type="text" name="campground[title]" class="form-control" value="<%= campground.title %>"
                     required>
                 <div class="valid-feedback">Great new name!</div>
                 <div class="invalid-feedback">Please enter name!</div>
 
             </div>
             <div class="form-group">
-                <label for="newDetails[location]" class="form-label">Location</label>
-                <input type="text" name="newDetails[location]" class="form-control" value="<%= campground.location %>"
+                <label for="campground[location]" class="form-label">Location</label>
+                <input type="text" name="campground[location]" class="form-control" value="<%= campground.location %>"
                     required>
                 <div class="valid-feedback">Interesting new location!</div>
                 <div class="invalid-feedback">Please input location!</div>
             </div>
             <div>
-                <label for="newDetails[price]" class="form-label" style="display:block">Price</label>
+                <label for="campground[price]" class="form-label" style="display:block">Price</label>
 
             </div>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text">$</span>
                 </div>
-                <input type="number" min="0" step="0.01" name="newDetails[price]" class="form-control"
+                <input type="number" min="0" step="0.01" name="campground[price]" class="form-control"
                     value="<%= campground.price  %>" required>
                 <div class="valid-feedback">New price checks out!</div>
                 <div class="invalid-feedback">Please enter correct price!</div>
@@ -40,15 +40,15 @@
                 <div class="rounded img-thumbnail" style="width: 100%;max-height: 40%;">
                     <img id="campImg" src="<%= campground.image %>" style="width:100%">
                 </div>
-                <label for="newDetails[image]" class="form-label">Image</label>
-                <input id="imglink" type="text" name="newDetails[image]" class="form-control"
+                <label for="campground[image]" class="form-label">Image</label>
+                <input id="imglink" type="text" name="campground[image]" class="form-control"
                     value="<%= campground.image %>" required>
                 <div class="valid-feedback">New image loaded!</div>
                 <div class="invalid-feedback">Enter image!</div>
             </div>
             <div class="form-group">
-                <label for="newDetails[description]">Description</label>
-                <textarea class="form-control" name="newDetails[description]" rows="5"
+                <label for="campground[description]">Description</label>
+                <textarea class="form-control" name="campground[description]" rows="5"
                     style="resize: none;"><%=campground.description %></textarea>
                 <div class="valid-feedback">Fine new description!</div>
                 <div class="invalid-feedback">Please enter camp description!</div>
@@ -71,5 +71,6 @@
         campImg.src = imgLink.value;
     })
 </script>
+
 
 <script src="/js/formValidation.js"></script>
