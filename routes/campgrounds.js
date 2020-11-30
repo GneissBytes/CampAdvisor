@@ -2,8 +2,8 @@ const express = require('express');
 const wrapAsync = require('../utils/wrapAsync')
 const ExpressError = require('../utils/ExpressError')
 const Campground = require('../models/campground')
-const {validateCampground} = require('../utils/validation')
-const router = express.Router({mergeParams: true});
+const { validateCampground } = require('../utils/validation')
+const router = express.Router({ mergeParams: true });
 
 router.get('/', wrapAsync(async (req, res) => {
     const campgrounds = await Campground.find({});
@@ -15,6 +15,7 @@ router.post('/', validateCampground, wrapAsync(async (req, res, next) => {
     const { campground } = req.body;
     const newCampground = new Campground({ ...campground });
     await newCampground.save()
+    req.flash('success', 'Successfully added a new campground!')
     res.redirect('/campgrounds')
 }));
 
@@ -43,6 +44,7 @@ router.put('/:_id/', validateCampground, wrapAsync(async (req, res) => {
     const editedCampground = await Campground.findOneAndUpdate({ _id },
         { $set: { ...campground } },
         { new: true, runValidators: true, useFindAndModify: true })
+    req.flash('success', 'Successfully updated the campground.')
     if (editedCampground == undefined) throw new ExpressError("No campground to edit with this id found.", 404)
     res.redirect(`/campgrounds/${_id}`)
 }));
@@ -50,6 +52,7 @@ router.put('/:_id/', validateCampground, wrapAsync(async (req, res) => {
 router.delete('/:_id/', wrapAsync(async (req, res) => {
     const { _id } = req.params;
     const removedCampground = await Campground.findOneAndRemove({ _id })
+    req.flash('success', 'Successfully deleted the campground.')
     if (removedCampground == undefined) throw new ExpressError("No campground with this id found.", 404)
     res.redirect('/campgrounds')
 }));

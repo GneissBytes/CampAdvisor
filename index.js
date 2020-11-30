@@ -6,6 +6,8 @@ const ejsMate = require('ejs-mate')
 const ExpressError = require('./utils/ExpressError')
 const campgroundsRoutes = require('./routes/campgrounds')
 const reviewsRoutes = require('./routes/reviews')
+const session = require('express-session')
+const flash = require('express-flash')
 const app = express();
 
 //#region Settings
@@ -16,6 +18,24 @@ app.use(express.static(path.join(__dirname, 'public'))) // public directory
 app.use(express.urlencoded({ exte: true })) // encoder for queries, params, bodies etc
 app.use(methodOverride('_method')) // force methods
 app.use(express.json()) // recognize incoming request objects as jsons
+const sessionCongif = {
+    secret: 'thisisnotasecret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 7 * 3600 * 1000, //expire after a week 
+        maxAge: 7 * 3600 * 1000
+    }
+}
+app.use(session(sessionCongif))
+app.use(flash())
+
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error')
+    next();
+})
 //#endregion
 
 //#region mongoose connection
@@ -30,8 +50,11 @@ db.on("error", console.error.bind(console.log("error connecting to database")));
 db.once("open", () => (console.log("connection to database established")));
 //#endregion
 
+//#region routes
 app.use('/campgrounds', campgroundsRoutes)
 app.use('/campgrounds/:_idCamp/reviews', reviewsRoutes)
+//#endregion
+
 
 app.get('/', (req, res) => {
     res.send('home')
@@ -46,7 +69,9 @@ app.use((err, req, res, next) => {
     console.log('error!!')
     console.log(err)
     if (!err.message) err.message = "Something went wrong"
-    res.status(statusCode).render('error', { title: err.name, err })
+    // res.status(statusCode).render('error', { title: err.name, err })
+    req.flash('error', `${err.message} Error code ${statusCode}`)
+    res.redirect('/campgrounds')
 })
 
 app.listen(3000, () => {
