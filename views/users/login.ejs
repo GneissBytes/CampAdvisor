@@ -1,0 +1,23 @@
+<% layout('./layouts/boilerplate') %>
+<div class="row mb-3">
+    <div class="col-6 offset-3">
+        <h1 class="text-center mb-5">Log in</h1>
+        <form action="/login" method="POST" novalidate class="validated-form">
+            <div class="form-group">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" id="username" required>
+                <div class="valid-feedback">Username ok</div>
+                <div class="invalid-feedback">Username required!</div>
+            </div>
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input id="password" type="password" name="password" class="form-control" required>
+                <div class="valid-feedback">Password ok</div>
+                <div class="invalid-feedback">Password required!</div>
+            </div>
+            <button type="submit" class="btn btn-info">Login!</button>
+        </form>
+    </div>
+</div>
+
+<script src="/js/formValidation.js"></script>

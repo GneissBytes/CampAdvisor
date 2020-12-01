@@ -44,7 +44,8 @@ const seedDB = async function () {
             location: `${location.city}, ${location.state}`,
             price: randomPrice(500),
             description: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Accusamus illum aspernatur doloribus explicabo incidunt omnis ducimus sunt, magni labore consequuntur.',
-            image: 'http://source.unsplash.com/collection/483251'
+            image: 'http://source.unsplash.com/collection/483251',
+            author: '5fc674bf85b4643274843e8b'
         })
         await newCampground.save()
         console.log('saved camp', i)

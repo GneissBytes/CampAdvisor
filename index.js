@@ -1,3 +1,4 @@
+//#region requires
 const mongoose = require('mongoose');
 const express = require('express');
 const path = require('path');
@@ -6,18 +7,22 @@ const ejsMate = require('ejs-mate')
 const ExpressError = require('./utils/ExpressError')
 const campgroundsRoutes = require('./routes/campgrounds')
 const reviewsRoutes = require('./routes/reviews')
+const usersRoutes = require('./routes/users')
 const session = require('express-session')
 const flash = require('express-flash')
+const passport = require('passport')
+const LocalStrategy = require('passport-local')
+const User = require('./models/user')
 const app = express();
 
-//#region Settings
-app.set('view engine', 'ejs'); // use ejs as viewengine
-app.set('views', path.join(__dirname, 'views')) // view directory
-app.engine('ejs', ejsMate) // add layout, partial and block functions to ejs
+//#endregion 
+
+//#region app.use
 app.use(express.static(path.join(__dirname, 'public'))) // public directory
 app.use(express.urlencoded({ exte: true })) // encoder for queries, params, bodies etc
 app.use(methodOverride('_method')) // force methods
 app.use(express.json()) // recognize incoming request objects as jsons
+
 const sessionCongif = {
     secret: 'thisisnotasecret',
     resave: false,
@@ -31,13 +36,26 @@ const sessionCongif = {
 app.use(session(sessionCongif))
 app.use(flash())
 
+app.use(passport.initialize()) //initialize passport, must be after use(session)
+app.use(passport.session()) //persistent login session
+passport.use(new LocalStrategy(User.authenticate())) //use LocalStratego, wtih auth method from User model
+
+passport.serializeUser(User.serializeUser()) //serialize user using user
+passport.deserializeUser(User.deserializeUser()) //same as above for deserializing
+
+// send flash messages to all responds
 app.use((req, res, next) => {
     res.locals.success = req.flash('success');
-    res.locals.error = req.flash('error')
+    res.locals.error = req.flash('error');
+    res.locals.currentUser = req.user;
     next();
 })
+//#endregion 
+//#region app.set
+app.set('view engine', 'ejs'); // use ejs as viewengine
+app.set('views', path.join(__dirname, 'views')) // view directory
+app.engine('ejs', ejsMate) // add layout, partial and block functions to ejs
 //#endregion
-
 //#region mongoose connection
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser: true,
@@ -49,11 +67,13 @@ const db = mongoose.connection;
 db.on("error", console.error.bind(console.log("error connecting to database")));
 db.once("open", () => (console.log("connection to database established")));
 //#endregion
-
-//#region routes
+//#region use routes
 app.use('/campgrounds', campgroundsRoutes)
 app.use('/campgrounds/:_idCamp/reviews', reviewsRoutes)
+app.use('/', usersRoutes)
 //#endregion
+
+
 
 
 app.get('/', (req, res) => {

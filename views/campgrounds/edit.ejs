@@ -1,6 +1,6 @@
 <% layout('./layouts/boilerplate') %>
+<h1 class="text-center mb-5">Edit Campground <%= campground.title %> </h1>
 <div class="row mb-3">
-    <h1 class="text-center mb-5">Edit Campground <%= campground.title %> </h1>
     <div class="col-6 offset-3">
         <form id="campedit" action="/campgrounds/<%= campground._id %>?_method=PUT" method="POST" class="validated-form"
             novalidate>

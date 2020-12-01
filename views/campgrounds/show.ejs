@@ -15,15 +15,21 @@
 
             </ul>
             <div class="card-body">
-                <a href="/campgrounds" card-link"><button class="btn btn-secondary">Go back</button> </a>
-                <a href="/campgrounds/<%= campground._id %>/edit" class="btn btn-warning">Edit campground</a>
+                <% if (currentUser && (campground.author._id.equals(currentUser._id))) { %>
+                <a href="/campgrounds/<%= campground._id %>/edit" class="btn btn-warning">Edit</a>
+                <form action="/campgrounds/<%= campground._id %>?_method=DELETE" style="display: inline" method="POST"
+                    onsubmit="return confirm('Are you sure you want to delete campground <%= campground.title %>?')">
+                    <button class="btn btn-danger">Delete</button>
+                </form>
+                <% } %>
+                <a href="/campgrounds" class="ml-auto btn btn-secondary" style="align-self:flex-end">Go back</a>
             </div>
             <div class="card-footer text-muted">
-                <%= Math.floor(Math.random()*365)+1 %> days ago
+                Submited <%= Math.floor(Math.random()*365)+1 %> days ago by <%= campground.author.username %>
             </div>
         </div>
 
-        
+
     </div>
     <div class="col-6 mb-5">
         <% if (campground.reviews.length == 0) { %>
@@ -50,7 +56,9 @@
                 <div class="card-body">
                     <h5 class="mb-0 card-title"><strong><%= '*'.repeat(review.rating) %> </strong></h5>
                     <p class="mb-0 card-text"><strong><%= review.body %> </strong></p>
-                    <form class="mt-2" action="/campgrounds/<%= campground._id %>/reviews/<%= review._id %>?_method=DELETE" method=POST>
+                    <form class="mt-2"
+                        action="/campgrounds/<%= campground._id %>/reviews/<%= review._id %>?_method=DELETE"
+                        method=POST>
                         <button type="submit" class="btn btn-danger btn-sm">Remove this review</button>
                     </form>
                 </div>
