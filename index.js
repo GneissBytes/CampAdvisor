@@ -86,8 +86,8 @@ app.all('*', (req, res, next) => {
 
 app.use((err, req, res, next) => {
     const { statusCode = 500 } = err;
-    console.log('error!!')
-    console.log(err)
+    // console.log('error!!')
+    // console.log(err)
     if (!err.message) err.message = "Something went wrong"
     // res.status(statusCode).render('error', { title: err.name, err })
     req.flash('error', `${err.message} Error code ${statusCode}`)
