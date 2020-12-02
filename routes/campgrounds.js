@@ -5,7 +5,8 @@ const campgrounds = require('../controllers/campgrounds')
 
 router.route('/')
     .get(wrapAsync(campgrounds.index))
-    .post(isLoggedIn, validateCampground, wrapAsync(campgrounds.submitCampground));
+    .post(isLoggedIn, validateCampground,
+        wrapAsync(campgrounds.submitCampground));
 
 router.get('/new', isLoggedIn, campgrounds.renderNewForm);
 
@@ -13,8 +14,9 @@ router.get('/new', isLoggedIn, campgrounds.renderNewForm);
 router.route('/:_id')
     .get(wrapAsync(campgrounds.showCampground))
     .put(isLoggedIn, isCampgroundAuthor,
-         validateCampground, wrapAsync(campgrounds.submitCampgroundChanges))
-    .delete(isLoggedIn, isCampgroundAuthor, wrapAsync(campgrounds.deleteCampground));
+        validateCampground, wrapAsync(campgrounds.submitCampgroundChanges))
+    .delete(isLoggedIn, isCampgroundAuthor,
+        wrapAsync(campgrounds.deleteCampground));
 
 router.get('/:_id/edit', isLoggedIn, wrapAsync(campgrounds.editCampground));
 

@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="/css/stars.css">
 
 <div class="row">
-    <div class="col-6 mb-5">
+    <div class="col-md-6 mb-5">
         <div class="card mb-3">
             <img class="card-img-top" src="<%= campground.image %> " alt="<%= campground.title %> ">
             <div class="card-body">
@@ -30,7 +30,7 @@
 
 
     </div>
-    <div class="col-6 mb-5">
+    <div class="col-md-6 mb-5">
         <% if (campground.reviews.length == 0) { %>
         <h2 class="mb-3">There are no reviews yet!</h2>
         <% } else { %>
