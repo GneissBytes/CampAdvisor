@@ -37,15 +37,22 @@
 
 
             <div class="input-group">
-                <div class="input-group-prepend">
-                  <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+
+                <div class="custom-file form-file">
+                    <input type="file" class="custom-file-input" name="images" id="images" multiple>
+                    <label class="custom-file-label custom-file-text" for="images">Add more images...</label>
                 </div>
-                <div class="custom-file">
-                  <input type="file" class="custom-file-input" name="images" id="campground[images]"
-                    aria-describedby="inputGroupFileAddon01" multiple>
-                  <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+            </div>
+            <div class="mb-3">
+                <% campground.images.forEach(function(img,i ){ %>
+                <img src="<%= img.thumbnail %>" alt="" class="img-thumbnail">
+                <div class="form-check-inline">
+                    <input type="checkbox" id="img<%= i %>" name="deleteImages[]" value="<%= img.filename %>">
                 </div>
-              </div>            <div class="form-group">
+                <label for="img<%= i %>">Delete?</label>
+                <% }) %>
+            </div>
+            <div class="form-group">
                 <label for="campground[description]">Description</label>
                 <textarea class="form-control" name="campground[description]" rows="5"
                     style="resize: none;"><%=campground.description %></textarea>
@@ -63,13 +70,7 @@
         </div>
     </div>
 </div>
-<script>
-    const imgLink = document.querySelector('#imglink');
-    const campImg = document.querySelector("#campImg");
-    imgLink.addEventListener("change", () => {
-        campImg.src = imgLink.value;
-    })
-</script>
 
-
+<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+<script>bsCustomFileInput.init()</script>
 <script src="/js/formValidation.js"></script>

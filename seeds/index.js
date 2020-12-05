@@ -45,16 +45,8 @@ const seedDB = async function () {
             price: randomPrice(500),
             description: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Accusamus illum aspernatur doloribus explicabo incidunt omnis ducimus sunt, magni labore consequuntur.',
             images: [{
-                url: 'https://images.unsplash.com/photo-1501555088652-021faa106b9b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1053&q=80',
-                filename: 'notImportant'
-            },
-            {
-                url: 'https://images.unsplash.com/photo-1500517075506-2beeb86c0e68?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1039&q=80',
-                filename: 'notImportant'
-            },
-            {
-                url: 'https://images.unsplash.com/photo-1553116505-41cafc2ce760?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80',
-                filename: 'notImportant'
+                url: 'https://res.cloudinary.com/dw87jombm/image/upload/v1607183487/YelpCamp/19fbbd4b29faabde35be5146e4be7c2a4d110ced9edb4c65428d9073dee511e4_naynx2.jpg',
+                filename: 'yelpcamp/19fbbd4b29faabde35be5146e4be7c2a4d110ced9edb4c65428d9073dee511e4_naynx2'
             }],
             author: '5fc674bf85b4643274843e8b'
         })

@@ -1,5 +1,6 @@
 const ExpressError = require('../utils/ExpressError')
 const Campground = require('../models/campground')
+const {cloudinary} = require('../cloudinary/index')
 
 module.exports.index = async (req, res) => {
     const campgrounds = await Campground.find({});
@@ -47,9 +48,15 @@ module.exports.submitCampgroundChanges = async (req, res) => {
     let { campground } = req.body;
     const editedCampground = await Campground.findOneAndUpdate({ _id },
         { $set: { ...campground } },
-        { new: true, runValidators: true, useFindAndModify: true })
+        { new: true, runValidators: true, useFindAndModify: false })
     editedCampground.images.push(...req.files.map(f => ({ url: f.path, filename: f.filename })))
     await editedCampground.save()
+    if (req.body.deleteImages) {
+        for (let filename of req.body.deleteImages) {
+            await cloudinary.uploader.destroy(filename)
+        }
+        await editedCampground.updateOne({ $pull: { images: { filename: { $in: req.body.deleteImages } } } })
+    }
     req.flash('success', 'Successfully updated the campground.')
     if (editedCampground == undefined) throw new ExpressError("No campground to edit with this id found.", 404)
     return res.redirect(`/campgrounds/${_id}`)

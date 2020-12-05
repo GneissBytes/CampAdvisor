@@ -12,13 +12,15 @@ router.route('/')
     .get(wrapAsync(campgrounds.index))
     // .post(isLoggedIn, validateCampground, upload.array('image'),
     //     wrapAsync(campgrounds.submitCampground))
-    .post(isLoggedIn, upload.array('images'),validateCampground,
+    .post(isLoggedIn, upload.array('images'), validateCampground,
         wrapAsync(campgrounds.submitCampground));
 
 router.get('/new', isLoggedIn, campgrounds.renderNewForm);
 
 router.route('/:_id')
     .get(wrapAsync(campgrounds.showCampground))
+    // .put(isLoggedIn, isCampgroundAuthor, upload.array('images'),
+    //     validateCampground, (req, res, next) => { console.log(req.body); next() }, wrapAsync(campgrounds.submitCampgroundChanges))
     .put(isLoggedIn, isCampgroundAuthor, upload.array('images'),
         validateCampground, wrapAsync(campgrounds.submitCampgroundChanges))
     .delete(isLoggedIn, isCampgroundAuthor,
