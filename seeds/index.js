@@ -44,7 +44,18 @@ const seedDB = async function () {
             location: `${location.city}, ${location.state}`,
             price: randomPrice(500),
             description: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Accusamus illum aspernatur doloribus explicabo incidunt omnis ducimus sunt, magni labore consequuntur.',
-            image: 'http://source.unsplash.com/collection/483251',
+            images: [{
+                url: 'https://images.unsplash.com/photo-1501555088652-021faa106b9b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1053&q=80',
+                filename: 'notImportant'
+            },
+            {
+                url: 'https://images.unsplash.com/photo-1500517075506-2beeb86c0e68?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1039&q=80',
+                filename: 'notImportant'
+            },
+            {
+                url: 'https://images.unsplash.com/photo-1553116505-41cafc2ce760?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80',
+                filename: 'notImportant'
+            }],
             author: '5fc674bf85b4643274843e8b'
         })
         await newCampground.save()

@@ -15,7 +15,7 @@ module.exports.submitReview = async (req, res) => {
     await user.save()
     req.flash('success', 'Review added successfully!')
     res.redirect(`/campgrounds/${_idCamp}`)
-}
+};
 
 module.exports.deleteReview = async (req, res) => {
     const { _idCamp, _idReview } = req.params;
@@ -23,9 +23,9 @@ module.exports.deleteReview = async (req, res) => {
     const review = await Review.findOneAndDelete({ _id: _idReview }, { useFindAndModify: false })
     req.flash('success', 'Review deleted successfully!')
     res.redirect(`/campgrounds/${_idCamp}`)
-}
+};
 
 module.exports.campgroundRedirect = (req, res) => {
     const { _idCamp } = req.params
     res.redirect(`/campgrounds/${_idCamp}`)
-}
+};

@@ -1,19 +1,25 @@
 const express = require('express');
+const multer = require('multer');
+const { storage } = require('../cloudinary')
+const upload = multer({ storage })
+
 const { isLoggedIn, validateCampground, isCampgroundAuthor, wrapAsync } = require('../middleware')
 const router = express.Router({ mergeParams: true });
 const campgrounds = require('../controllers/campgrounds')
 
+
 router.route('/')
     .get(wrapAsync(campgrounds.index))
-    .post(isLoggedIn, validateCampground,
+    // .post(isLoggedIn, validateCampground, upload.array('image'),
+    //     wrapAsync(campgrounds.submitCampground))
+    .post(isLoggedIn, upload.array('images'),validateCampground,
         wrapAsync(campgrounds.submitCampground));
 
 router.get('/new', isLoggedIn, campgrounds.renderNewForm);
 
-
 router.route('/:_id')
     .get(wrapAsync(campgrounds.showCampground))
-    .put(isLoggedIn, isCampgroundAuthor,
+    .put(isLoggedIn, isCampgroundAuthor, upload.array('images'),
         validateCampground, wrapAsync(campgrounds.submitCampgroundChanges))
     .delete(isLoggedIn, isCampgroundAuthor,
         wrapAsync(campgrounds.deleteCampground));

@@ -13,9 +13,10 @@ const campgroundSchema = new Schema({
     description: {
         type: String
     },
-    image: {
-        type: String
-    },
+    images: [{
+        url: String,
+        filename: String
+    }],
     location: {
         type: String,
     },

@@ -1,20 +1,23 @@
+if (process.env.NODE_ENV !== "production") require('dotenv').config()
+
 //#region requires
 const mongoose = require('mongoose');
 const express = require('express');
 const path = require('path');
 const methodOverride = require('method-override')
 const ejsMate = require('ejs-mate')
-const ExpressError = require('./utils/ExpressError')
-const campgroundsRoutes = require('./routes/campgrounds')
-const reviewsRoutes = require('./routes/reviews')
-const usersRoutes = require('./routes/users')
 const session = require('express-session')
 const flash = require('express-flash')
 const passport = require('passport')
 const LocalStrategy = require('passport-local')
-const User = require('./models/user')
-const app = express();
 
+const ExpressError = require('./utils/ExpressError')
+const User = require('./models/user')
+const campgroundsRoutes = require('./routes/campgrounds')
+const reviewsRoutes = require('./routes/reviews')
+const usersRoutes = require('./routes/users')
+
+const app = express();
 //#endregion 
 
 //#region app.use
@@ -51,11 +54,13 @@ app.use((req, res, next) => {
     next();
 })
 //#endregion 
+
 //#region app.set
 app.set('view engine', 'ejs'); // use ejs as viewengine
 app.set('views', path.join(__dirname, 'views')) // view directory
 app.engine('ejs', ejsMate) // add layout, partial and block functions to ejs
 //#endregion
+
 //#region mongoose connection
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser: true,
@@ -67,14 +72,12 @@ const db = mongoose.connection;
 db.on("error", console.error.bind(console.log("error connecting to database")));
 db.once("open", () => (console.log("connection to database established")));
 //#endregion
+
 //#region use routes
 app.use('/campgrounds', campgroundsRoutes)
 app.use('/campgrounds/:_idCamp/reviews', reviewsRoutes)
 app.use('/', usersRoutes)
 //#endregion
-
-
-
 
 app.get('/', (req, res) => {
     res.send('home')
