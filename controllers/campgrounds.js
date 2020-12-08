@@ -1,6 +1,9 @@
 const ExpressError = require('../utils/ExpressError')
 const Campground = require('../models/campground')
-const {cloudinary} = require('../cloudinary/index')
+const { cloudinary } = require('../cloudinary/index')
+const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding")
+const accessToken = process.env.MAPBOX_TOKEN
+const geocoder = mbxGeocoding({ accessToken })
 
 module.exports.index = async (req, res) => {
     const campgrounds = await Campground.find({});
@@ -14,10 +17,13 @@ module.exports.renderNewForm = async (req, res) => {
 
 module.exports.submitCampground = async (req, res, next) => {
     const campground = new Campground(req.body.campground);
+    const geodata = await geocoder.forwardGeocode({
+        query: campground.location,
+        limit: 1
+    }).send()
+    campground.geometry = geodata.body.features[0].geometry
     campground.images = req.files.map(f => ({ url: f.path, filename: f.filename }))
     campground.author = req.user._id
-    console.log(req.files)
-    console.log(campground)
     await campground.save()
     req.flash('success', 'Successfully added a new campground!')
     res.redirect('/campgrounds')

@@ -6,7 +6,10 @@ var methodOverride = require('method-override')
 const Campground = require('../models/campground')
 const cities = require('./cities')
 const { places, descriptors } = require('./seedHelpers');
-const { random } = require('colors');
+const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding")
+const accessToken = 'pk.eyJ1IjoiY3RodWxodXRoZSIsImEiOiJja2ljMDFpMzgxNG10MzF0ZzJvbTE2aXE2In0.UnQKfpdgtpFAgiyldrsjQw'
+const geocoder = mbxGeocoding({ accessToken })
+
 
 app.set('view engine', 'ejs'); // use ejs
 app.set('views', path.join(__dirname, 'views'))
@@ -37,7 +40,7 @@ const randomPrice = function (max, min = 0) {
 
 const seedDB = async function () {
     await Campground.deleteMany({});
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 300; i++) {
         const location = cities.randomElement()
         const newCampground = new Campground({
             title: `${descriptors.randomElement()} ${places.randomElement()}`,
@@ -50,6 +53,11 @@ const seedDB = async function () {
             }],
             author: '5fc674bf85b4643274843e8b'
         })
+        const geodata = await geocoder.forwardGeocode({
+            query: newCampground.location,
+            limit: 1
+        }).send()
+        newCampground.geometry = geodata.body.features[0].geometry;
         await newCampground.save()
         console.log('saved camp', i)
     }

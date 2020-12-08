@@ -1,21 +1,44 @@
 <% layout('./layouts/boilerplate') %>
-<h1>List of all campgrounds</h1>
-<a href="/campgrounds/new" class="btn btn-success mb-2">Create new</a>
-<img src="<%= campgrounds[0] %> " alt="">
-<% for( let campground of campgrounds ) { %>
-<div class="card mb-3">
-    <div class="row">
-        <div class="col-md-4">
-            <img class="img-fluid" src="<%= campground.images[0].url %> " alt="<%= campground.title %>">
-        </div>
-        <div class="col-md-8">
-            <div class="card-body">
-                <h5 class="card-title"><%= campground.title %> </h5>
-                <p class="card-text"><%= campground.description %> </p>
-                <p class="text-muted"><%= campground.location %></p>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
+    <link rel="stylesheet" href="/css/maps.css">
+
+    <div id="map" class="index-cluster-map"></div>
+    <h1>All campgrounds</h1>
+    <% for( let campground of campgrounds ) { %>
+        <div class="card mb-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <% if (campground.images.length) { %>
+                        <img class="img-fluid" src="<%= campground.images[0].url %> " alt="<%= campground.title %>">
+                        <% } else { %>
+                            <img class="img-fluid" src="https://i.imgur.com/HtOtrAt.jpeg" alt="<%= campground.title %>">
+                            <% } %>
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <%= campground.title %>
+                        </h5>
+                        <p class="card-text">
+                            <%= campground.description %>
+                        </p>
+                        <p class="text-muted">
+                            <%= campground.location %>
+                        </p>
+                        <a href="/campgrounds/<%= campground._id %> " class="btn btn-primary mb-3">See more</a>
+                    </div>
+                </div>
             </div>
-            <a href="/campgrounds/<%= campground._id %> " class="btn btn-primary mb-3">See more</a>
         </div>
-    </div>
-</div>
-<% } %>
+        <% } %>
+
+
+
+            <script>
+                const MAPBOX_TOKEN = '<%- process.env.MAPBOX_TOKEN %>';
+                const campgrounds = {
+                    features: <%- JSON.stringify(campgrounds) %>
+                }
+            </script>
+            <script src='/js/indexClusterMap.js'></script>

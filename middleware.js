@@ -41,7 +41,7 @@ const isLoggedIn = (req, res, next) => {
     next()
 }
 
-const isCampgroundAuthor = async (req, res, next) => {
+const isCampgroundAuthor = async(req, res, next) => {
     const { _id } = req.params;
     const campground = await Campground.findById(_id);
     if (!campground.author.equals(req.user._id)) {
@@ -51,7 +51,7 @@ const isCampgroundAuthor = async (req, res, next) => {
     next();
 }
 
-const isReviewAuthor = async (req, res, next) => {
+const isReviewAuthor = async(req, res, next) => {
     const { _idCamp, _idReview } = req.params;
     const review = await Review.findById(_idReview)
     if (!review.author.equals(req.user._id)) {
@@ -61,8 +61,18 @@ const isReviewAuthor = async (req, res, next) => {
     next();
 }
 
+const grabPrevious = (req, res, next) => {
+    req.session.returnTo = req.originalUrl;
+    next()
+}
+
 
 module.exports = {
-    isLoggedIn, validateCampground, validateReview, isCampgroundAuthor
-    , wrapAsync, isReviewAuthor
+    isLoggedIn,
+    validateCampground,
+    validateReview,
+    isCampgroundAuthor,
+    wrapAsync,
+    isReviewAuthor,
+    grabPrevious
 }

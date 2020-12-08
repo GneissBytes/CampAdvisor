@@ -1,4 +1,5 @@
 const passport = require('passport')
+const User = require('../models/user')
 
 
 module.exports.getRegisterForm = (req, res) => {

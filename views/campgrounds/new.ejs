@@ -1,50 +1,59 @@
 <% layout('./layouts/boilerplate') %>
-<div class="row mb-3">
-    <div class="col-6 offset-3">
-        <h1 class="text-center mb-5">New Campground</h1>
-        <form action="/campgrounds" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="title" class="form-label">Title</label>
-                <input type="text" name="campground[title]" class="form-control" required>
-                <div class="valid-feedback">Great name!</div>
-                <div class="invalid-feedback">Name required!</div>
-            </div>
-            <div class="form-group">
-                <label for="location" class="form-label">Location</label>
-                <input type="text" name="campground[location]" class="form-control" required>
-                <div class="valid-feedback">Interesting location!</div>
-                <div class="invalid-feedback">Please input location!</div>
-            </div>
-            <div>
-                <label for="campground[price]" class="form-label" style="display:block">Price</label>
-            </div>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">$</span>
+    <div class="container  justify-content-center align-items-center mt-2 mb-3">
+        <!-- d-flex breaks shit -->
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h5 class="card-title mt-0">Submit new campground!</h5>
+                        <form action="/campgrounds" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="title" class="form-label">Title</label>
+                                <input type="text" name="campground[title]" class="form-control" required>
+                                <div class="valid-feedback">Great name!</div>
+                                <div class="invalid-feedback">Name required!</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="location" class="form-label">Location</label>
+                                <input type="text" name="campground[location]" class="form-control" required>
+                                <div class="valid-feedback">Interesting location!</div>
+                                <div class="invalid-feedback">Please input location!</div>
+                            </div>
+                            <div>
+                                <label for="campground[price]" class="form-label" style="display:block">Price</label>
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                </div>
+                                <input type="number" min="0" step="0.01" name="campground[price]" class="form-control" required>
+                                <div class="valid-feedback">Price checks out!</div>
+                                <div class="invalid-feedback">Please enter correct price!</div>
+                            </div>
+                            <div class="input-group mb-3">
+                                <label for="">Select images</label>
+                                <div class="custom-file form-file" style="width:110%">
+                                    <input type="file" class="custom-file-input" name="images" id="images" multiple>
+                                    <label class="custom-file-label custom-file-text" for="images">Choose images...</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea class="form-control" name="campground[description]" rows="4" style="resize: none;" required></textarea>
+                                <div class="valid-feedback">Fine description!</div>
+                                <div class="invalid-feedback">Please enter camp description!</div>
+                            </div>
+                            <button type="submit" class="btn btn-info">Submit new camp</button>
+                        </form>
+                    </div>
                 </div>
-                <input type="number" min="0" step="0.01" name="campground[price]" class="form-control" required>
-                <div class="valid-feedback">Price checks out!</div>
-                <div class="invalid-feedback">Please enter correct price!</div>
             </div>
-            <div class="input-group mb-3">
-                <label for="">Select images</label>
-                <div class="custom-file form-file" style="width:110%">
-                    <input type="file" class="custom-file-input" name="images" id="images" multiple>
-                    <label class="custom-file-label custom-file-text" for="images">Choose images...</label>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="description">Description</label>
-                <textarea class="form-control" name="campground[description]" rows="5" style="resize: none;"
-                    required></textarea>
-                <div class="valid-feedback">Fine description!</div>
-                <div class="invalid-feedback">Please enter camp description!</div>
-            </div>
-            <button type="submit" class="btn btn-info">Submit new camp</button>
-        </form>
+        </div>
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
-<script>bsCustomFileInput.init()</script>
-<script src="/js/formValidation.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+    <script>
+        bsCustomFileInput.init()
+    </script>
+    <script src="/js/formValidation.js"></script>

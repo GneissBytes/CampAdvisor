@@ -1,29 +1,35 @@
 <% layout('./layouts/boilerplate') %>
-<div class="row mb-3">
-    <div class="col-6 offset-3">
-        <h1 class="text-center mb-5">Sign up</h1>
-        <form action="/register" method="POST" novalidate class="validated-form">
-            <div class="form-group">
-                <label for="email" class="form-label">Email</label>
-                <input id="email" type="email" name="user[email]" class="form-control" required>
-                <div class="valid-feedback">Ok</div>
-                <div class="invalid-feedback">Email required</div>
+    <div class="container  justify-content-center align-items-center mt-5">
+        <!-- d-flex breaks shit -->
+        <div class="row">
+            <div class="col-md-6 offset-md-3 col-xl-4 offset-xl-4">
+                <div class="card shadow">
+                    <img src="https://images.unsplash.com/photo-1555723962-671b30addd2d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1053&q=80" alt="Login" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="card-title">Register</h5>
+                        <form action="/register" method="POST" novalidate class="validated-form">
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email</label>
+                                <input id="email" type="email" name="user[email]" class="form-control" autofocus required>
+                                <div class="valid-feedback">Ok</div>
+                                <div class="invalid-feedback">Email required</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" name="user[username]" class="form-control" id="username" required>
+                                <div class="valid-feedback">Username ok</div>
+                                <div class="invalid-feedback">Username required!</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="password" class="form-label">Password</label>
+                                <input id="password" type="password" name="user[password]" class="form-control" required>
+                                <div class="valid-feedback">Password ok</div>
+                                <div class="invalid-feedback">Password required!</div>
+                            </div>
+                            <button type="submit" class="btn btn-info">Register!</button>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" name="user[username]" class="form-control" id="username" required>
-                <div class="valid-feedback">Username ok</div>
-                <div class="invalid-feedback">Username required!</div>
-            </div>
-            <div class="form-group">
-                <label for="password" class="form-label">Password</label>
-                <input id="password" type="password" name="user[password]" class="form-control" required>
-                <div class="valid-feedback">Password ok</div>
-                <div class="invalid-feedback">Password required!</div>
-            </div>
-            <button type="submit" class="btn btn-info">Register!</button>
-        </form>
+        </div>
     </div>
-</div>
-
-<script src="/js/formValidation.js"></script>

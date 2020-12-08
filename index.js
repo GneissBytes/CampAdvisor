@@ -10,28 +10,47 @@ const session = require('express-session')
 const flash = require('express-flash')
 const passport = require('passport')
 const LocalStrategy = require('passport-local')
+const mongoSanitize = require('express-mongo-sanitize');
+const helmet = require('helmet')
+
 
 const ExpressError = require('./utils/ExpressError')
 const User = require('./models/user')
 const campgroundsRoutes = require('./routes/campgrounds')
 const reviewsRoutes = require('./routes/reviews')
 const usersRoutes = require('./routes/users')
+const { scriptSrcUrls, styleSrcUrls, connectSrcUrls, fontSrcUlrs } = require('./sources')
 
 const app = express();
 //#endregion 
 
 //#region app.use
+app.use(mongoSanitize()); //sanitize queries
+app.use(helmet())
+app.use(helmet.contentSecurityPolicy({
+    directives: {
+        defaultSrc: [],
+        connectSrc: ["'self'", ...connectSrcUrls],
+        scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+        styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+        workerSrc: ["'self'", "blob:"],
+        imgSrc: ["'self'", "blob:", "data:", "https://res.cloudinary.com/dw87jombm/", "https://images.unsplash.com/"],
+        fontSrc: ["'self'", ...fontSrcUlrs]
+    }
+}))
 app.use(express.static(path.join(__dirname, 'public'))) // public directory
 app.use(express.urlencoded({ exte: true })) // encoder for queries, params, bodies etc
 app.use(methodOverride('_method')) // force methods
 app.use(express.json()) // recognize incoming request objects as jsons
 
 const sessionCongif = {
+    name: 'session',
     secret: 'thisisnotasecret',
     resave: false,
     saveUninitialized: true,
     cookie: {
-        httpOnly: true,
+        httpOnly: true, //not accesible by javascript
+        // secure: true, //cookies can be change only thru https
         expires: Date.now() + 7 * 3600 * 1000, //expire after a week 
         maxAge: 7 * 3600 * 1000
     }
@@ -48,18 +67,18 @@ passport.deserializeUser(User.deserializeUser()) //same as above for deserializi
 
 // send flash messages to all responds
 app.use((req, res, next) => {
-    res.locals.success = req.flash('success');
-    res.locals.error = req.flash('error');
-    res.locals.currentUser = req.user;
-    next();
-})
-//#endregion 
+        res.locals.success = req.flash('success');
+        res.locals.error = req.flash('error');
+        res.locals.currentUser = req.user;
+        next();
+    })
+    //#endregion 
 
 //#region app.set
 app.set('view engine', 'ejs'); // use ejs as viewengine
 app.set('views', path.join(__dirname, 'views')) // view directory
 app.engine('ejs', ejsMate) // add layout, partial and block functions to ejs
-//#endregion
+    //#endregion
 
 //#region mongoose connection
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
@@ -73,14 +92,14 @@ db.on("error", console.error.bind(console.log("error connecting to database")));
 db.once("open", () => (console.log("connection to database established")));
 //#endregion
 
-//#region use routes
+//#region ROUTES
 app.use('/campgrounds', campgroundsRoutes)
 app.use('/campgrounds/:_idCamp/reviews', reviewsRoutes)
 app.use('/', usersRoutes)
-//#endregion
+    //#endregion
 
 app.get('/', (req, res) => {
-    res.send('home')
+    res.render('home', { title: "Welcome to YelpCamp" })
 })
 
 app.all('*', (req, res, next) => {
@@ -92,9 +111,13 @@ app.use((err, req, res, next) => {
     // console.log('error!!')
     // console.log(err)
     if (!err.message) err.message = "Something went wrong"
-    // res.status(statusCode).render('error', { title: err.name, err })
+    if (process.env.NODE_ENV !== "production") {
+        return res.status(statusCode).render('error', { title: err.name, err })
+    }
     req.flash('error', `${err.message} Error code ${statusCode}`)
-    res.redirect('/campgrounds')
+    const redirectUrl = req.session.returnTo || '/campgrounds'
+    delete req.session.returnTo
+    res.redirect(redirectUrl)
 })
 
 app.listen(3000, () => {
