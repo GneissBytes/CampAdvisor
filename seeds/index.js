@@ -51,7 +51,7 @@ const seedDB = async function () {
                 url: 'https://res.cloudinary.com/dw87jombm/image/upload/v1607183487/YelpCamp/19fbbd4b29faabde35be5146e4be7c2a4d110ced9edb4c65428d9073dee511e4_naynx2.jpg',
                 filename: 'yelpcamp/19fbbd4b29faabde35be5146e4be7c2a4d110ced9edb4c65428d9073dee511e4_naynx2'
             }],
-            author: '5fc674bf85b4643274843e8b'
+            author: '5fd0df580c74043d6023edec'
         })
         const geodata = await geocoder.forwardGeocode({
             query: newCampground.location,

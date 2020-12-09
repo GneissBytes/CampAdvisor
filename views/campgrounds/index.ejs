@@ -1,10 +1,10 @@
-<% layout('./layouts/boilerplate') %>
+<% layout('./layouts/boilerplate_index') %>
     <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
     <link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
     <link rel="stylesheet" href="/css/maps.css">
     <link rel="stylesheet" href="/css/index.css">
 
-    <div id="map" class="index-cluster-map"></div>
+   
     <h1>All campgrounds</h1>
     <% for( let campground of campgrounds ) { %>
         <div class="card mb-3">

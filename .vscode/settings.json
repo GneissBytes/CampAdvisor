@@ -1,0 +1,4 @@
+{
+    "prettier.embeddedLanguageFormatting": "off",
+    "prettier.printWidth": 300
+}

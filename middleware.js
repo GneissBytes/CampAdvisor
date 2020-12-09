@@ -2,6 +2,7 @@ const ExpressError = require("./utils/ExpressError");
 const { campgroundSchema, reviewSchema } = require('./schemas')
 const Campground = require('./models/campground')
 const Review = require('./models/review');
+const User = require('./models/user')
 
 
 const wrapAsync = (func) => {
@@ -10,6 +11,32 @@ const wrapAsync = (func) => {
     };
 };
 
+const isAdmin = async (req, res, next) => {
+    const user = await User.findById(req.user._id)
+    if (user.isAdmin) {
+        next();
+    } else {
+        throw new ExpressError("You must be an admin to view this", 403)
+    }
+}
+
+const canAddReview = async (req, res, next) => {
+    const user = await User.findById(req.user._id)
+    if (user.isAdmin || user.canAddReview) {
+        next()
+    } else {
+        throw new ExpressError("You dont have review privleges", 403)
+    }
+}
+
+const canAddCampground = async (req, res, next) => {
+    const user = await User.findById(req.user._id)
+    if (user.isAdmin || user.canAddCampground) {
+        next()
+    } else {
+        throw new ExpressError("You dont have review privleges", 403)
+    }
+}
 
 // check if campground data is correct
 const validateCampground = (req, res, next) => {
@@ -41,24 +68,28 @@ const isLoggedIn = (req, res, next) => {
     next()
 }
 
-const isCampgroundAuthor = async(req, res, next) => {
+const isCampgroundAuthor = async (req, res, next) => {
     const { _id } = req.params;
     const campground = await Campground.findById(_id);
-    if (!campground.author.equals(req.user._id)) {
-        req.flash('error', 'You are not authorized to edit this page');
-        return res.redirect(`/campgrounds/${_id}`);
+    if (campground.author.equals(req.user._id) || res.locals.currentUser.isAdmin) {
+        next ()
+    } else {
+        req.flash('error', 'You are not authorized to edit this campground');
+        return res.redirect(`/campgrounds/${_idCamp}`); 
     }
-    next();
 }
 
-const isReviewAuthor = async(req, res, next) => {
+const isReviewAuthor = async (req, res, next) => {
     const { _idCamp, _idReview } = req.params;
     const review = await Review.findById(_idReview)
-    if (!review.author.equals(req.user._id)) {
+    console.log(res.locals.currentUser.isAdmin)
+    console.log(!review.author.equals(req.user._id) || !res.locals.currentUser.isAdmin)
+    if (review.author.equals(req.user._id) || res.locals.currentUser.isAdmin) {
+        next ()
+    } else {
         req.flash('error', 'You are not authorized to edit this review');
         return res.redirect(`/campgrounds/${_idCamp}`);
     }
-    next();
 }
 
 const grabPrevious = (req, res, next) => {
@@ -74,5 +105,8 @@ module.exports = {
     isCampgroundAuthor,
     wrapAsync,
     isReviewAuthor,
-    grabPrevious
+    grabPrevious,
+    isAdmin,
+    canAddReview,
+    canAddCampground
 }

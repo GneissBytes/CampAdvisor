@@ -11,8 +11,10 @@ const userSchema = new Schema({
     reviews: [{
         type: Schema.Types.ObjectId,
         ref: 'Review'
-    }]
-
+    }],
+    isAdmin: { type: Boolean, default: false },
+    canAddCampground: { type: Boolean, default: false },
+    canAddReview: { type: Boolean, default: false }
 })
 
 userSchema.plugin(passportLocalMongoose) // adds username, password, makes them unique and required, adds additional methods

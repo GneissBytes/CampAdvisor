@@ -6,14 +6,14 @@ const Campground = require('../models/campground')
 const countSufix = require('../utils/countSufixer')
 
 
-const { isLoggedIn, validateCampground, isCampgroundAuthor, wrapAsync } = require('../middleware')
+const { isLoggedIn, validateCampground, isCampgroundAuthor, wrapAsync, canAddCampground} = require('../middleware')
 const router = express.Router({ mergeParams: true });
 const campgrounds = require('../controllers/campgrounds')
 
 
 router.route('/')
     .get(wrapAsync(campgrounds.index))
-    .post(isLoggedIn, upload.array('images'), validateCampground,
+    .post(isLoggedIn, wrapAsync(canAddCampground), upload.array('images'), validateCampground,
         wrapAsync(campgrounds.submitCampground));
 
 

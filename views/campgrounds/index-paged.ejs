@@ -1,13 +1,19 @@
 <% layout('./layouts/boilerplate') %>
-    <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
-    <link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
-    <link rel="stylesheet" href="/css/maps.css">
-    <link rel="stylesheet" href="/css/index.css">
-
+<script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+<link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
+<link rel="stylesheet" href="/css/maps.css">
+<link rel="stylesheet" href="/css/index.css">
+</main>
+<main>
     <div id="map" class="index-cluster-map"></div>
+</main>
+<main class="container mt-3">
     <h1>
-        <%= header %> Showing
-            <%= campgrounds.length %> campgrounds.
+        <% if (campgrounds.length == allCampgrounds.length) { %>
+         Displaying all <%= campgrounds.length %> campgrounds.
+        <% } else  { %>
+        <%= header %>Displaying <%= campgrounds.length %> campgrounds.
+        <% } %> 
     </h1>
     <div class="navigation row">
         <div class="col-md-10">
@@ -17,39 +23,41 @@
              disabled
             <% } %>">
                         <% if (pagenumber == 1) { %>
-                            <span class="page-link">Previous</span>
-                            <% } else {%>
-                                <a class="page-link" href="?pagenumber=<%= Number(pagenumber)-1 %>&viewcount=<%= viewcount %>">Previous</a>
-                                <% } %>
+                        <span class="page-link">Previous</span>
+                        <% } else {%>
+                        <a class="page-link" href="?pagenumber=<%= Number(pagenumber)-1 %>&viewcount=<%= viewcount %>">Previous</a>
+                        <% } %>
 
                     </li>
                     <% if (pagenumber > 3) { %>
-                        <% for( let index = -3; index < 6; index++ ) { %>
-                            <li class="page-item <% if (index == 0) { %>
+                    <% for( let index = -3; index < 6; index++ ) { %>
+                    <li class="page-item <% if (index == 0) { %>
              active
             <% } %> <% if ((Number(pagenumber)+index) > maxPages) { %>
              disabled
             <% } %>">
-                                <a class="page-link" href="?pagenumber=<%= Number(pagenumber)+index %>&viewcount=<%= viewcount %>">
-                                    <%= Number(pagenumber)+index %>
-                                </a>
-                            </li>
-                            <% } %>
-                                <% } else { %>
-                                    <% for( let index = 1; index < 10; index++ ) { %>
-                                        <li class="page-item <% if (pagenumber == index) { %>
+                        <a class="page-link" href="?pagenumber=<%= Number(pagenumber)+index %>&viewcount=<%= viewcount %>">
+                            <%= Number(pagenumber)+index %>
+                        </a>
+                    </li>
+                    <% } %>
+                    <% } else { %>
+                    <% for( let index = 1; index < 10; index++ ) { %>
+                    <li class="page-item <% if (pagenumber == index) { %>
      active
+    <% } %><% if (index > maxPages) { %>
+     disabled
     <% } %>">
-                                            <a class="page-link" href="?pagenumber=<%= index %>&viewcount=<%= viewcount %>">
-                                                <%= index %>
-                                            </a>
-                                        </li>
-                                        <% } %>
-                                            <% } %>
-                                                <li class="page-item <% if ((Number(pagenumber)+1) > maxPages) { %>
+                        <a class="page-link" href="?pagenumber=<%= index %>&viewcount=<%= viewcount %>">
+                            <%= index %>
+                        </a>
+                    </li>
+                    <% } %>
+                    <% } %>
+                    <li class="page-item <% if ((Number(pagenumber)+1) > maxPages) { %>
             disabled<% } %> ">
-                                                    <a class="page-link" href="?pagenumber=<%= Number(pagenumber)+1 %>&viewcount=<%= viewcount %>">Next</a>
-                                                </li>
+                        <a class="page-link" href="?pagenumber=<%= Number(pagenumber)+1 %>&viewcount=<%= viewcount %>">Next</a>
+                    </li>
                 </ul>
             </nav>
         </div>
@@ -57,103 +65,112 @@
             <form action="" method="GET" style="width:70px; display:inline-block;" id="viewcount-form">
                 <input value="<%= pagenumber %>" name="pagenumber" type="hidden">
                 <select name="viewcount" id="" class="form-control" onchange="this.form.submit()">
-                <option value="#">#</option>
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="30">30</option>
-                <option value="40">40</option>
-            </select>
+                    <option value="#">#</option>
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="75">75</option>
+                    <option value="100">100</option>
+                    <option value="<%= allCampgrounds.length %> ">All</option>
+                </select>
             </form>
         </div>
     </div>
     <% for( let campground of campgrounds ) { %>
-        <div class="card mb-3">
-            <div class="row">
-                <div class="col-md-4">
-                    <% if (campground.images.length) { %>
-                        <img class="img-fluid" src="<%= campground.images[0].url %> " alt="<%= campground.title %>">
-                        <% } else { %>
-                            <img class="img-fluid" src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" alt="<%= campground.title %>">
-                            <% } %>
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <%= campground.title %>
-                        </h5>
-                        <p class="card-text">
-                            <%= campground.description %>
-                        </p>
-                        <p class="text-muted">
-                            <%= campground.location %>
-                        </p>
-                        <a href="/campgrounds/<%= campground._id %> " class="btn btn-primary mb-3">See more</a>
-                    </div>
+    <div class="card mb-3">
+        <div class="row">
+            <div class="col-md-4">
+                <% if (campground.images.length) { %>
+                <img class="img-fluid" src="<%= campground.images[0].url %> " alt="<%= campground.title %>">
+                <% } else { %>
+                <img class="img-fluid" src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" alt="<%= campground.title %>">
+                <% } %>
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <%= campground.title %>
+                    </h5>
+                    <p class="card-text">
+                        <%= campground.description %>
+                    </p>
+                    <p class="text-muted">
+                        <%= campground.location %>
+                    </p>
+                    <a href="/campgrounds/<%= campground._id %> " class="btn btn-primary mb-3">See more</a>
                 </div>
             </div>
         </div>
-        <% } %>
-            <div class="navigation row">
-                <div class="col-md-10">
-                    <nav aria-label="pagenavigation" style="display:inline-block">
-                        <ul class="pagination">
-                            <li class="page-item <% if (pagenumber == 1) { %>
+    </div>
+    <% } %>
+
+    <div class="navigation row">
+        <div class="col-md-10">
+            <nav aria-label="pagenavigation" style="display:inline-block">
+                <ul class="pagination">
+                    <li class="page-item <% if (pagenumber == 1) { %>
                  disabled
                 <% } %>">
-                                <% if (pagenumber == 1) { %>
-                                    <span class="page-link">Previous</span>
-                                    <% } else {%>
-                                        <a class="page-link" href="?pagenumber=<%= Number(pagenumber)-1 %>&viewcount=<%= viewcount %>">Previous</a>
-                                        <% } %>
+                        <% if (pagenumber == 1) { %>
+                        <span class="page-link">Previous</span>
+                        <% } else {%>
+                        <a class="page-link" href="?pagenumber=<%= Number(pagenumber)-1 %>&viewcount=<%= viewcount %>">Previous</a>
+                        <% } %>
 
-                            </li>
-                            <% if (pagenumber > 3) { %>
-                                <% for( let index = -3; index < 6; index++ ) { %>
-                                    <li class="page-item <% if (index == 0) { %>
+                    </li>
+                    <% if (pagenumber > 3) { %>
+                    <% for( let index = -3; index < 6; index++ ) { %>
+                    <li class="page-item <% if (index == 0) { %>
                  active
                 <% } %> <% if ((Number(pagenumber)+index) > maxPages) { %>
                  disabled
                 <% } %>">
-                                        <a class="page-link" href="?pagenumber=<%= Number(pagenumber)+index %>&viewcount=<%= viewcount %>">
-                                            <%= Number(pagenumber)+index %>
-                                        </a>
-                                    </li>
-                                    <% } %>
-                                        <% } else { %>
-                                            <% for( let index = 1; index < 10; index++ ) { %>
-                                                <li class="page-item <% if (pagenumber == index) { %>
+                        <a class="page-link" href="?pagenumber=<%= Number(pagenumber)+index %>&viewcount=<%= viewcount %>">
+                            <%= Number(pagenumber)+index %>
+                        </a>
+                    </li>
+                    <% } %>
+                    <% } else { %>
+                    <% for( let index = 1; index < 10; index++ ) { %>
+                    <li class="page-item <% if (pagenumber == index) { %>
          active
+        <% } %><% if (index > maxPages) { %>
+         disabled
         <% } %>">
-                                                    <a class="page-link" href="?pagenumber=<%= index %>&viewcount=<%= viewcount %>">
-                                                        <%= index %>
-                                                    </a>
-                                                </li>
-                                                <% } %>
-                                                    <% } %>
-                                                        <li class="page-item <% if ((Number(pagenumber)+1) > maxPages) { %>
+                        <a class="page-link" href="?pagenumber=<%= index %>&viewcount=<%= viewcount %>">
+                            <%= index %>
+                        </a>
+                    </li>
+                    <% } %>
+                    <% } %>
+                    <li class="page-item <% if ((Number(pagenumber)+1) > maxPages) { %>
                 disabled<% } %> ">
-                                                            <a class="page-link" href="?pagenumber=<%= Number(pagenumber)+1 %>&viewcount=<%= viewcount %>">Next</a>
-                                                        </li>
-                        </ul>
-                    </nav>
-                </div>
-                <div class="col-md-2">
-                    <form action="" method="GET" style="width:70px; display:inline-block;" id="viewcount-form">
-                        <input value="<%= pagenumber %>" name="pagenumber" type="hidden">
-                        <select name="viewcount" id="" class="form-control" onchange="this.form.submit()">
-                <option value="#">#</option>
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="30">30</option>
-                <option value="40">40</option>
-            </select>
-                    </form>
-                </div>
-            </div>
-            <script>
-                const MAPBOX_TOKEN = '<%- process.env.MAPBOX_TOKEN %>';
-                const campgrounds = {
-                    features: <% - JSON.stringify(allCampgrounds) %>
+                        <a class="page-link" href="?pagenumber=<%= Number(pagenumber)+1 %>&viewcount=<%= viewcount %>">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col-md-2">
+            <form action="" method="GET" style="width:70px; display:inline-block;" id="viewcount-form">
+                <input value="<%= pagenumber %>" name="pagenumber" type="hidden">
+                <select name="viewcount" id="" class="form-control" onchange="this.form.submit()">
+                    <option value="#">#</option>
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="75">75</option>
+                    <option value="100">100</option>
+                </select>
+            </form>
+        </div>
+    </div>
+
+
+
+    <script>
+        const MAPBOX_TOKEN = '<%- process.env.MAPBOX_TOKEN %>';
+        const campgrounds = {
+            features: <%- JSON.stringify(allCampgrounds) %>
                 }
-            </script>
-            <script src='/js/indexClusterMap.js'></script>
+    </script>
+    <script src='/js/indexClusterMap.js'></script>
