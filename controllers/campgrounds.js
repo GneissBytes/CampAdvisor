@@ -5,7 +5,6 @@ const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding")
 const accessToken = process.env.MAPBOX_TOKEN
 const geocoder = mbxGeocoding({ accessToken })
 const countSufix = require('../utils/countSufixer')
-const { number } = require('joi')
     // module.exports.index = async (req, res) => {
     //     const campgrounds = await Campground.find({});
     //     if (!campgrounds) throw new ExpressError('No camps found', 503)
@@ -16,7 +15,10 @@ const { number } = require('joi')
 module.exports.index = async(req, res) => {
     const { viewcount = 10, pagenumber = 1 } = req.query
     const allCampgrounds = await Campground.find()
-    const campgroundCount = await Campground.find().countDocuments().populate('reviews', 'rating')
+    const campgroundCount = await Campground.find().countDocuments()
+    if (campgroundCount == 0) {
+        return res.render('campgrounds/no_campgrounds', {title:'Campground list'})
+    }
     const campgrounds = await Campground.find().skip(viewcount * (pagenumber - 1)).limit(Number(viewcount)).populate('reviews','rating')
     const title = `List of campgrounds`
     const header = `Showing ${countSufix(pagenumber)} page.`
