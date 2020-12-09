@@ -34,7 +34,7 @@ const canAddCampground = async (req, res, next) => {
     if (user.isAdmin || user.canAddCampground) {
         next()
     } else {
-        throw new ExpressError("You dont have review privleges", 403)
+        throw new ExpressError("You dont have enough privleges to add a new campground", 403)
     }
 }
 
