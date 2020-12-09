@@ -81,6 +81,7 @@ app.engine('ejs', ejsMate) // add layout, partial and block functions to ejs
     //#endregion
 
 //#region mongoose connection
+// local: mongodb://localhost:27017/yelp-camp
 const dbUrl = process.env.MONGODB_URL
 mongoose.connect(dbUrl, {
     useNewUrlParser: true,
