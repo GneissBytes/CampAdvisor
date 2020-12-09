@@ -2,18 +2,19 @@
 <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
 <link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
 <link rel="stylesheet" href="/css/maps.css">
+<link rel="stylesheet" href="/css/stars.css">
 <link rel="stylesheet" href="/css/index.css">
 </main>
 <main>
     <div id="map" class="index-cluster-map"></div>
 </main>
 <main class="container mt-3">
-    <h1>
+    <h1 class="mb-3">
         <% if (campgrounds.length == allCampgrounds.length) { %>
-         Displaying all <%= campgrounds.length %> campgrounds.
+        Displaying all <%= campgrounds.length %> campgrounds.
         <% } else  { %>
-        <%= header %>Displaying <%= campgrounds.length %> campgrounds.
-        <% } %> 
+        <%= header %> Displaying <%= campgrounds.length %> campgrounds.
+        <% } %>
     </h1>
     <div class="navigation row">
         <div class="col-md-10">
@@ -91,9 +92,28 @@
                     <h5 class="card-title">
                         <%= campground.title %>
                     </h5>
-                    <p class="card-text">
+                    <p class="card-text description">
                         <%= campground.description %>
                     </p>
+                    <% if (campground.reviews.length !== 0) { %>
+                    <% let nReviews =  campground.reviews.length%>
+                    <% let rating=0 %>
+                    <% for (let i=0; i<nReviews;i++) { rating+=campground.reviews[i].rating }%>
+                    <% rating = rating / nReviews %>
+                    <p class="card-text">
+                    <p class="starability-result " data-rating="<%= Math.round(rating) %>" style="display:inline-block">
+                        Rated:
+                        <%= rating %> stars
+                    </p>
+                    </p>
+                    <p class="card-text">
+                        <%= nReviews %> review<% if (nReviews !== 1) { %>s <% } %>
+                    </p>
+                    <% } else { %>
+                    <p class="text-muted">
+                        This campground is not yet rated
+                    </p>
+                    <% } %>
                     <p class="text-muted">
                         <%= campground.location %>
                     </p>
@@ -170,7 +190,6 @@
     <script>
         const MAPBOX_TOKEN = '<%- process.env.MAPBOX_TOKEN %>';
         const campgrounds = {
-            features: <%- JSON.stringify(allCampgrounds) %>
-                }
+            features: <%- JSON.stringify(allCampgrounds) %>}
     </script>
     <script src='/js/indexClusterMap.js'></script>

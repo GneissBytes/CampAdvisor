@@ -16,8 +16,8 @@ const { number } = require('joi')
 module.exports.index = async(req, res) => {
     const { viewcount = 10, pagenumber = 1 } = req.query
     const allCampgrounds = await Campground.find()
-    const campgroundCount = await Campground.find().countDocuments()
-    const campgrounds = await Campground.find().skip(viewcount * (pagenumber - 1)).limit(Number(viewcount))
+    const campgroundCount = await Campground.find().countDocuments().populate('reviews', 'rating')
+    const campgrounds = await Campground.find().skip(viewcount * (pagenumber - 1)).limit(Number(viewcount)).populate('reviews','rating')
     const title = `List of campgrounds`
     const header = `Showing ${countSufix(pagenumber)} page.`
     const maxPages = Math.ceil(campgroundCount / Number(viewcount))
