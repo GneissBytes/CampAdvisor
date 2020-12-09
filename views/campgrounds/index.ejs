@@ -2,6 +2,7 @@
     <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
     <link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
     <link rel="stylesheet" href="/css/maps.css">
+    <link rel="stylesheet" href="/css/index.css">
 
     <div id="map" class="index-cluster-map"></div>
     <h1>All campgrounds</h1>
@@ -12,7 +13,7 @@
                     <% if (campground.images.length) { %>
                         <img class="img-fluid" src="<%= campground.images[0].url %> " alt="<%= campground.title %>">
                         <% } else { %>
-                            <img class="img-fluid" src="https://i.imgur.com/HtOtrAt.jpeg" alt="<%= campground.title %>">
+                            <img class="img-fluid" src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" alt="<%= campground.title %>">
                             <% } %>
                 </div>
                 <div class="col-md-8">
@@ -38,7 +39,7 @@
             <script>
                 const MAPBOX_TOKEN = '<%- process.env.MAPBOX_TOKEN %>';
                 const campgrounds = {
-                    features: <%- JSON.stringify(campgrounds) %>
+                    features: <% - JSON.stringify(campgrounds) %>
                 }
             </script>
             <script src='/js/indexClusterMap.js'></script>

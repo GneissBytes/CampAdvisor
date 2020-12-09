@@ -2,6 +2,9 @@ const express = require('express');
 const multer = require('multer');
 const { storage } = require('../cloudinary')
 const upload = multer({ storage })
+const Campground = require('../models/campground')
+const countSufix = require('../utils/countSufixer')
+
 
 const { isLoggedIn, validateCampground, isCampgroundAuthor, wrapAsync } = require('../middleware')
 const router = express.Router({ mergeParams: true });
@@ -12,6 +15,7 @@ router.route('/')
     .get(wrapAsync(campgrounds.index))
     .post(isLoggedIn, upload.array('images'), validateCampground,
         wrapAsync(campgrounds.submitCampground));
+
 
 router.get('/new', isLoggedIn, campgrounds.renderNewForm);
 

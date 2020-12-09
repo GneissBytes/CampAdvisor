@@ -98,6 +98,8 @@ app.use('/campgrounds/:_idCamp/reviews', reviewsRoutes)
 app.use('/', usersRoutes)
     //#endregion
 
+
+
 app.get('/', (req, res) => {
     res.render('home', { title: "Welcome to YelpCamp" })
 })

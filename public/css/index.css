@@ -1,0 +1,12 @@
+img.img-fluid {
+    height: 300px;
+    width: 100%;
+    object-fit: cover;
+}
+
+.navigation {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
