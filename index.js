@@ -1,7 +1,5 @@
 if (process.env.NODE_ENV !== "production") require('dotenv').config()
 
-
-// dupa dupaaaaaa
 //#region requires
 const mongoose = require('mongoose');
 const express = require('express');
@@ -83,7 +81,8 @@ app.engine('ejs', ejsMate) // add layout, partial and block functions to ejs
     //#endregion
 
 //#region mongoose connection
-mongoose.connect('mongodb://localhost:27017/yelp-camp', {
+const dbUrl = process.env.MONGODB_URL
+mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true
