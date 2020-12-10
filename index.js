@@ -35,9 +35,6 @@ db.on("error", console.error.bind(console.log("error connecting to database")));
 db.once("open", () => (console.log("connection to database established")));
 
 
-
-
-
 //#region app.use
 app.use(mongoSanitize()); //sanitize queries
 app.use(helmet())
@@ -105,26 +102,19 @@ app.set('views', path.join(__dirname, 'views')) // view directory
 app.engine('ejs', ejsMate) // add layout, partial and block functions to ejs
     //#endregion
 
-//#region mongoose connection
-// local: mongodb://localhost:27017/yelp-camp
-
-
-
 //#region ROUTES
 app.use('/campgrounds', campgroundsRoutes)
 app.use('/campgrounds/:_idCamp/reviews', reviewsRoutes)
 app.use('/', usersRoutes)
     //#endregion
 
-
-
 app.get('/', (req, res) => {
     res.render('home', { title: "Welcome to YelpCamp" })
-})
+});
 
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404))
-})
+});
 
 app.use((err, req, res, next) => {
     const { statusCode = 500 } = err;
@@ -138,8 +128,8 @@ app.use((err, req, res, next) => {
     const redirectUrl = req.session.returnTo || '/campgrounds'
     delete req.session.returnTo
     res.redirect(redirectUrl)
-})
+});
 
 app.listen(3000, () => {
     console.log('listening at 3000')
-})
+});

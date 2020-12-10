@@ -32,6 +32,7 @@
         </div>
         <% if (campgrounds.length>0) { %>
         <div class="col-md-4" style="max-height:800px; overflow:scroll">
+            <h2>Campgrounds</h2>
             <% for( let campground of campgrounds ) { %>
             <div class="card" style="width:100%">
                 <div class="card-body">
@@ -49,6 +50,7 @@
         <% } %>
         <% if (reviews.length>0) { %>
             <div class="col-md-5" style="min-height:0;max-height:800px; overflow:scroll">
+                <h2>Reviews</h2>
                 <% for( let review of reviews ) { %>
                 <div class="card">
                     <div class="card-body">
