@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Review = require('./review')
 const Schema = mongoose.Schema;
+const User = require('./user')
 
 
 const ImageSchema = new Schema({
@@ -42,6 +43,10 @@ const campgroundSchema = new Schema({
         }]
 }, opts)
 
+campgroundSchema.virtual('toMapBox').get(function() {
+    return {title: this.title, location:this.location, price: this.price, geometry:this.geometry}
+})
+
 campgroundSchema.virtual('properties.popUpMarkup').get(function () {
     return `
     <strong><a href="/campgrounds/${this._id}">${this.title}</a></strong>
@@ -52,7 +57,8 @@ campgroundSchema.virtual('properties.popUpMarkup').get(function () {
 campgroundSchema.post('findOneAndRemove', async function (campground, next) {
     if (campground) {
         let reviews = campground.reviews;
-        await Review.deleteMany({ _id: { $in: reviews } });
+        await mongoose.model('Review').deleteMany({ _id: { $in: reviews } });
+        await mongoose.model('User').findByIdAndUpdate(campground.author, { $pull: { campgrounds: campground._id } }, { useFindAndModify: false });
     }
     next()
 

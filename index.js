@@ -7,22 +7,36 @@ const path = require('path');
 const methodOverride = require('method-override')
 const ejsMate = require('ejs-mate')
 const session = require('express-session')
+const MongoStore = require('connect-mongo')(session)
 const flash = require('express-flash')
 const passport = require('passport')
 const LocalStrategy = require('passport-local')
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet')
-
-
 const ExpressError = require('./utils/ExpressError')
 const User = require('./models/user')
 const campgroundsRoutes = require('./routes/campgrounds')
 const reviewsRoutes = require('./routes/reviews')
 const usersRoutes = require('./routes/users')
 const { scriptSrcUrls, styleSrcUrls, connectSrcUrls, fontSrcUlrs } = require('./sources')
-
-const app = express();
 //#endregion 
+const app = express();
+
+// const dbUrl = 'mongodb://localhost:27017/yelp-camp' //local
+const dbUrl = process.env.MONGODB_URL //remote
+mongoose.connect(dbUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true
+})
+
+const db = mongoose.connection;
+db.on("error", console.error.bind(console.log("error connecting to database")));
+db.once("open", () => (console.log("connection to database established")));
+
+
+
+
 
 //#region app.use
 app.use(mongoSanitize()); //sanitize queries
@@ -43,7 +57,18 @@ app.use(express.urlencoded({ exte: true })) // encoder for queries, params, bodi
 app.use(methodOverride('_method')) // force methods
 app.use(express.json()) // recognize incoming request objects as jsons
 
+const store = new MongoStore({
+    url: dbUrl,
+    secret: 'thisisnotasecret',
+    touchAfter: 24 * 3600 //reseave after 1 day
+});
+
+store.on("error", function(error) {
+    console.log("SESSION STORE ERROR", error)
+})
+
 const sessionCongif = {
+    store,
     name: 'session',
     secret: 'thisisnotasecret',
     resave: false,
@@ -82,17 +107,8 @@ app.engine('ejs', ejsMate) // add layout, partial and block functions to ejs
 
 //#region mongoose connection
 // local: mongodb://localhost:27017/yelp-camp
-const dbUrl = process.env.MONGODB_URL
-mongoose.connect(dbUrl, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true
-})
 
-const db = mongoose.connection;
-db.on("error", console.error.bind(console.log("error connecting to database")));
-db.once("open", () => (console.log("connection to database established")));
-//#endregion
+
 
 //#region ROUTES
 app.use('/campgrounds', campgroundsRoutes)

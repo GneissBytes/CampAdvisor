@@ -1,0 +1,72 @@
+<% layout('./layouts/boilerplate') %>
+<div class="container justify-content-center align-items-center mt-5  mb-3">
+    <div class="row">
+        <div class="col-md-4" style="max-height:800px; overflow:scroll">
+            <h2>Users</h2>
+            <% for( let user of users ) { %>
+            <div class="card mb-2">
+                <div class="card-body">
+                    <h5 class="card-title"><a href="/users/<%= user._id %>"><%= user.username %></a></h5>
+                    <p class="card-text"><%= user.email%></p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Owns <%= user.campgrounds.length %> campgrounds</li>
+                    <li class="list-group-item">Added <%= user.reviews.length %> reviews</li>
+                    <% if (user.isAdmin) { %>
+                    <li class="list-group-item">Administrator account</li>
+                    <% } else { %>
+                    <li class="list-group-item">Can <% if (!user.canAddReview) { %>
+                        not
+                        <% } %> add reviews.</li>
+                    <li class="list-group-item">Can <% if (!user.canAddCampground) { %>
+                        not
+                        <% } %> add campgrounds.</li>
+                    <% } %>
+                    <div class="list-group-item">
+                        <a class="btn btn-warning btn-sm" href="/admin/edit-privleges/<%= user._id %> ">Edit account privleges</a>
+                    </div>
+                    <li class="list-group-item">
+                        <form class="mt-2" action="/users/<%= user._id %>?_method=DELETE" method=POST onsubmit="return confirm('Are you sure you want to delete your account?')">
+                            <button type="submit" class="btn btn-danger btn-sm">Remove this account</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            <% } %>
+        </div>
+        <div class="col-md-4" style="max-height:800px; overflow:scroll">
+            <h2>Campgrounds</h2>
+            <% for( let campground of campgrounds ) { %>
+            <div class="card mb-2">
+                <div class="card-body">
+                    <h5 class="card-title"><a href="/campgrounds/<%= campground._id %>"><%= campground.title %></a></h5>
+                    <% if (campground.author) { %>
+                    <p class="card-text"><a href="/users/<%= campground.author._id %>"><%= campground.author.username %> </a></p>
+                    <% } else { %>
+                    <p class="card-text">Author removed</p>
+                    <%}%>
+                    <a href="/campgrounds/<%= campground._id %>/edit" class="btn btn-warning">Edit</a>
+                    <form action="/campgrounds/<%= campground._id %>/admin?_method=DELETE" style="display: inline" method="POST" onsubmit="return confirm('Are you sure you want to delete campground <%= campground.title %>?')">
+                        <button class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+            <% } %>
+        </div>
+        <div class="col-md-4" style="max-height:800px; overflow:scroll">
+            <h2>Reviews</h2>
+            <% for( let review of reviews ) { %>
+            <div class="card mb-2">
+                <div class="card-body">
+                    <h5 class="card-title"><a href="/users/<% review.author._id %>"> <%= review.author.username %></a></h5>
+                    <p class="card-text"><%= review.body %> </p>
+                    <form class="mt-2" action="/campgrounds/<%= review.campground._id %>/reviews/<%= review._id %>/admin?_method=DELETE" method=POST onsubmit="">
+                        <button type="submit" class="btn btn-danger btn-sm">Remove this review</button>
+                    </form>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </div>
+    </h2>
+</div>

@@ -9,6 +9,7 @@ module.exports.submitReview = async (req, res) => {
     const user = await User.findOne({ username: req.user.username })
     campground.reviews.push(review);
     review.author = user;
+    review.campground = _idCamp;
     user.reviews.push(review)
     await review.save()
     await campground.save()
@@ -19,10 +20,23 @@ module.exports.submitReview = async (req, res) => {
 
 module.exports.deleteReview = async (req, res) => {
     const { _idCamp, _idReview } = req.params;
-    const campground = await Campground.findByIdAndUpdate(_idCamp, { $pull: { reviews: _idReview } }, { useFindAndModify: false })
     const review = await Review.findOneAndDelete({ _id: _idReview }, { useFindAndModify: false })
     req.flash('success', 'Review deleted successfully!')
     res.redirect(`/campgrounds/${_idCamp}`)
+};
+
+module.exports.deleteReviewUser = async (req, res) => {
+    const { _idCamp, _idReview } = req.params;
+    const review = await Review.findOneAndDelete({ _id: _idReview }, { useFindAndModify: false })
+    req.flash('success', 'Review deleted successfully!')
+    res.redirect(`/users/${review.author}`)
+};
+
+module.exports.deleteReviewAdmin = async (req, res) => {
+    const { _idCamp, _idReview } = req.params;
+    const review = await Review.findOneAndDelete({ _id: _idReview }, { useFindAndModify: false })
+    req.flash('success', 'Review deleted successfully!')
+    res.redirect(`/admin`)
 };
 
 module.exports.campgroundRedirect = (req, res) => {

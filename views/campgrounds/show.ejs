@@ -69,7 +69,11 @@
             <div class="card-footer text-muted">
                 Submited
                 <%= Math.floor(Math.random()*365)+1 %> days ago by
-                <%= campground.author.username %>
+                <% if (campground.author) { %>
+                <%= campground.author.username %>  
+                <% } else { %>
+                user removed
+                <% } %>
             </div>
         </div>
 
@@ -103,7 +107,11 @@
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">
+                        <% if (review.author) { %>
                         <%= review.author.username %>
+                        <% } else {%>
+                        user removed
+                        <% } %>
                     </h5>
                     <p class="starability-result" data-rating="<%= review.rating %>">
                         Rated:

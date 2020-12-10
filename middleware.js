@@ -11,6 +11,8 @@ const wrapAsync = (func) => {
     };
 };
 
+
+
 const isAdmin = async (req, res, next) => {
     const user = await User.findById(req.user._id)
     if (user.isAdmin) {
@@ -82,15 +84,26 @@ const isCampgroundAuthor = async (req, res, next) => {
 const isReviewAuthor = async (req, res, next) => {
     const { _idCamp, _idReview } = req.params;
     const review = await Review.findById(_idReview)
-    console.log(res.locals.currentUser.isAdmin)
     console.log(!review.author.equals(req.user._id) || !res.locals.currentUser.isAdmin)
     if (review.author.equals(req.user._id) || res.locals.currentUser.isAdmin) {
-        next ()
+        next()
     } else {
         req.flash('error', 'You are not authorized to edit this review');
         return res.redirect(`/campgrounds/${_idCamp}`);
     }
 }
+
+const isAuthorizedUser = async (req, res, next) => {
+    const user = await User.findById(req.user._id)
+    if (user._id.equals(res.locals.currentUser._id || res.locals.currentUser.isAdmin)) {
+        next()
+    } else {
+        req.flash('error', 'You are not authorized to view this user');
+        return res.redirect(`/campgrounds/${_idCamp}`);
+    }
+}
+
+
 
 const grabPrevious = (req, res, next) => {
     req.session.returnTo = req.originalUrl;
@@ -108,5 +121,6 @@ module.exports = {
     grabPrevious,
     isAdmin,
     canAddReview,
-    canAddCampground
+    canAddCampground,
+    isAuthorizedUser
 }

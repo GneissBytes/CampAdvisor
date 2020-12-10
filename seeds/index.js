@@ -4,6 +4,7 @@ const path = require('path');
 const app = express();
 var methodOverride = require('method-override')
 const Campground = require('../models/campground')
+const User = require('../models/user')
 const cities = require('./cities')
 const { places, descriptors } = require('./seedHelpers');
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding")
@@ -17,9 +18,8 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ exte: true })) // REEEEEEEEEEEE
 app.use(methodOverride('_method')) // forcing methods
 app.use(express.json())
-
-
-mongoose.connect('mongodb://localhost:27017/yelp-camp', {
+// mongodb://localhost:27017/yelp-camp
+mongoose.connect('mongodb+srv://dbUser0:rUtWcjuKkQ7evFXb@cluster0.asuhk.mongodb.net/<dbname>?retryWrites=true&w=majority', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true
@@ -40,6 +40,7 @@ const randomPrice = function (max, min = 0) {
 
 const seedDB = async function () {
     await Campground.deleteMany({});
+    const user = await User.findById('5fd1f58e0654b65a94d886b7')
     for (let i = 0; i < 300; i++) {
         const location = cities.randomElement()
         const newCampground = new Campground({
@@ -48,19 +49,22 @@ const seedDB = async function () {
             price: randomPrice(500),
             description: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Accusamus illum aspernatur doloribus explicabo incidunt omnis ducimus sunt, magni labore consequuntur.',
             images: [{
-                url: 'https://res.cloudinary.com/dw87jombm/image/upload/v1607183487/YelpCamp/19fbbd4b29faabde35be5146e4be7c2a4d110ced9edb4c65428d9073dee511e4_naynx2.jpg',
+                url: Math.random() > 0.5 ? 'https://res.cloudinary.com/dw87jombm/image/upload/v1607183487/YelpCamp/19fbbd4b29faabde35be5146e4be7c2a4d110ced9edb4c65428d9073dee511e4_naynx2.jpg': 'https://res.cloudinary.com/dw87jombm/image/upload/v1607453178/YelpCamp/xrp3roxdgi55jglmrxix.jpg',
                 filename: 'yelpcamp/19fbbd4b29faabde35be5146e4be7c2a4d110ced9edb4c65428d9073dee511e4_naynx2'
             }],
-            author: '5fd0df580c74043d6023edec'
+            author: '5fd1f58e0654b65a94d886b7'
         })
         const geodata = await geocoder.forwardGeocode({
             query: newCampground.location,
             limit: 1
         }).send()
+        
         newCampground.geometry = geodata.body.features[0].geometry;
         await newCampground.save()
+        user.campgrounds.push(newCampground)
         console.log('saved camp', i)
     }
+    await user.save()
     console.log('Finished saving')
 }
 

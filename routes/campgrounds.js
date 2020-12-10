@@ -6,7 +6,7 @@ const Campground = require('../models/campground')
 const countSufix = require('../utils/countSufixer')
 
 
-const { isLoggedIn, validateCampground, isCampgroundAuthor, wrapAsync, canAddCampground} = require('../middleware')
+const { isLoggedIn, validateCampground, isCampgroundAuthor, wrapAsync, canAddCampground, isAdmin } = require('../middleware')
 const router = express.Router({ mergeParams: true });
 const campgrounds = require('../controllers/campgrounds')
 
@@ -19,6 +19,15 @@ router.route('/')
 
 router.get('/new', isLoggedIn, campgrounds.renderNewForm);
 
+router.delete('/:_id/user', isLoggedIn, isCampgroundAuthor,
+    wrapAsync(campgrounds.deleteCampgroundUser));
+
+
+router.delete('/:_id/admin', isLoggedIn, isAdmin,
+    wrapAsync(campgrounds.deleteCampgroundAdmin));
+
+
+
 router.route('/:_id')
     .get(wrapAsync(campgrounds.showCampground))
     .put(isLoggedIn, isCampgroundAuthor, upload.array('images'),
@@ -26,7 +35,7 @@ router.route('/:_id')
     .delete(isLoggedIn, isCampgroundAuthor,
         wrapAsync(campgrounds.deleteCampground));
 
-router.get('/:_id/edit', isLoggedIn, wrapAsync(campgrounds.editCampground));
+router.get('/:_id/edit', isLoggedIn,isCampgroundAuthor, wrapAsync(campgrounds.editCampground));
 
 
 module.exports = router;

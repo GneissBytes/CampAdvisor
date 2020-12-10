@@ -1,0 +1,61 @@
+<div class="navigation row">
+    <div class="col-md-10">
+        <nav aria-label="pagenavigation" style="display:inline-block">
+            <ul class="pagination">
+                <li class="page-item <% if (pagenumber == 1) { %>
+         disabled
+        <% } %>">
+                    <% if (pagenumber == 1) { %>
+                    <span class="page-link">Previous</span>
+                    <% } else {%>
+                    <a class="page-link" href="?pagenumber=<%= Number(pagenumber)-1 %>&viewcount=<%= viewcount %>">Previous</a>
+                    <% } %>
+
+                </li>
+                <% if (pagenumber > 3) { %>
+                <% for( let index = -3; index < 6; index++ ) { %>
+                <li class="page-item <% if (index == 0) { %>
+         active
+        <% } %> <% if ((Number(pagenumber)+index) > maxPages) { %>
+         disabled
+        <% } %>">
+                    <a class="page-link" href="?pagenumber=<%= Number(pagenumber)+index %>&viewcount=<%= viewcount %>">
+                        <%= Number(pagenumber)+index %>
+                    </a>
+                </li>
+                <% } %>
+                <% } else { %>
+                <% for( let index = 1; index < 10; index++ ) { %>
+                <li class="page-item <% if (pagenumber == index) { %>
+ active
+<% } %><% if (index > maxPages) { %>
+ disabled
+<% } %>">
+                    <a class="page-link" href="?pagenumber=<%= index %>&viewcount=<%= viewcount %>">
+                        <%= index %>
+                    </a>
+                </li>
+                <% } %>
+                <% } %>
+                <li class="page-item <% if ((Number(pagenumber)+1) > maxPages) { %>
+        disabled<% } %> ">
+                    <a class="page-link" href="?pagenumber=<%= Number(pagenumber)+1 %>&viewcount=<%= viewcount %>">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="col-md-2">
+        <form action="" method="GET" style="width:70px; display:inline-block;" id="viewcount-form">
+            <input value="<%= pagenumber %>" name="pagenumber" type="hidden">
+            <select name="viewcount" id="" class="form-control" onchange="this.form.submit()">
+                <option value="#">#</option>
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="75">75</option>
+                <option value="100">100</option>
+                <option value="<%= allCampgrounds.length %> ">All</option>
+            </select>
+        </form>
+    </div>
+</div>

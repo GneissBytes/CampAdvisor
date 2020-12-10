@@ -1,5 +1,6 @@
 const ExpressError = require('../utils/ExpressError')
 const Campground = require('../models/campground')
+const User = require('../models/user')
 const { cloudinary } = require('../cloudinary/index')
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding")
 const accessToken = process.env.MAPBOX_TOKEN
@@ -14,7 +15,9 @@ const countSufix = require('../utils/countSufixer')
 
 module.exports.index = async(req, res) => {
     const { viewcount = 10, pagenumber = 1 } = req.query
-    const allCampgrounds = await Campground.find()
+    const allCampgroundsFound = await Campground.find()
+    const allCampgrounds = [];
+    allCampgroundsFound.forEach((campground)=> allCampgrounds.push(campground.toMapBox))
     const campgroundCount = await Campground.find().countDocuments()
     if (campgroundCount == 0) {
         return res.render('campgrounds/no_campgrounds', {title:'Campground list'})
@@ -43,6 +46,8 @@ module.exports.submitCampground = async(req, res, next) => {
     campground.geometry = geodata.body.features[0].geometry
     campground.images = req.files.map(f => ({ url: f.path, filename: f.filename }))
     campground.author = req.user._id
+    const user =await User.findById(req.user._id)
+    user.campgrounds.push(campground)
     await campground.save()
     req.flash('success', 'Successfully added a new campground!')
     res.redirect('/campgrounds')
@@ -92,4 +97,20 @@ module.exports.deleteCampground = async(req, res) => {
     req.flash('success', 'Successfully deleted the campground.')
     if (removedCampground == undefined) throw new ExpressError("No campground with this id found.", 404)
     res.redirect('/campgrounds')
+};
+
+module.exports.deleteCampgroundUser = async(req, res) => {
+    const { _id } = req.params;
+    const removedCampground = await Campground.findOneAndRemove({ _id }, { useFindAndModify: false })
+    req.flash('success', 'Successfully deleted the campground.')
+    if (removedCampground == undefined) throw new ExpressError("No campground with this id found.", 404)
+    res.redirect(`/users/${removedCampground.author}`)
+};
+
+module.exports.deleteCampgroundAdmin = async(req, res) => {
+    const { _id } = req.params;
+    const removedCampground = await Campground.findOneAndRemove({ _id }, { useFindAndModify: false })
+    req.flash('success', 'Successfully deleted the campground.')
+    if (removedCampground == undefined) throw new ExpressError("No campground with this id found.", 404)
+    res.redirect(`/admin`)
 };
