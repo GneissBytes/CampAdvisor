@@ -73,6 +73,12 @@ module.exports.deleteUser = async (req, res, next) => {
 module.exports.changeUser = async (req, res) => {
     const { _id } = req.params;
     const { username, email, new_password, old_password } = req.body;
+
+    try {
+        const user = await User.findByIdAndUpdate(_id, { $set: { username, email } }, { useFindAndModify: false, runValidators: true })
+    } catch (e) {
+        throw new ExpressError('Username and email must be unique', 403)
+    }
     if (new_password && old_password) {
         await user.changePassword(old_password, new_password)
         if (err) {
@@ -82,11 +88,6 @@ module.exports.changeUser = async (req, res) => {
                 throw new ExpressError('Something went wrong', 403)
             }
         }
-    }
-    try {
-        const user = await User.findByIdAndUpdate(_id, { $set: { username, email } }, { useFindAndModify: false, runValidators: true })
-    } catch (e) {
-        throw new ExpressError('Username and email must be unique', 403)
     }
 
     res.redirect(`/login`)
