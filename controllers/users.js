@@ -76,19 +76,20 @@ module.exports.changeUser = async (req, res) => {
 
     try {
         const user = await User.findByIdAndUpdate(_id, { $set: { username, email } }, { useFindAndModify: false, runValidators: true })
+        if (new_password && old_password) {
+            await user.changePassword(old_password, new_password)
+            if (err) {
+                if (err.name === 'IncorrectPasswordError') {
+                    throw new ExpressError('Incorrect password', 403)
+                } else {
+                    throw new ExpressError('Something went wrong', 403)
+                }
+            }
+        }
     } catch (e) {
         throw new ExpressError('Username and email must be unique', 403)
     }
-    if (new_password && old_password) {
-        await user.changePassword(old_password, new_password)
-        if (err) {
-            if (err.name === 'IncorrectPasswordError') {
-                throw new ExpressError('Incorrect password', 403)
-            } else {
-                throw new ExpressError('Something went wrong', 403)
-            }
-        }
-    }
+
 
     res.redirect(`/login`)
 
