@@ -73,13 +73,15 @@ module.exports.deleteUser = async (req, res, next) => {
 module.exports.changeUser = async (req, res) => {
     const { _id } = req.params;
     const { username, email, new_password, old_password } = req.body;
-    try {
-        if (new_password && old_password) {
-            await user.changePassword(old_password, new_password)
-            await user.save()
+    if (new_password && old_password) {
+        await user.changePassword(old_password, new_password)
+        if (err) {
+            if (err.name === 'IncorrectPasswordError') {
+                throw new ExpressError('Incorrect password', 403)
+            } else {
+                throw new ExpressError('Something went wrong', 403)
+            }
         }
-    } catch (e) {
-        throw new ExpressError('Incorrect password', 403)
     }
     try {
         const user = await User.findByIdAndUpdate(_id, { $set: { username, email } }, { useFindAndModify: false, runValidators: true })
