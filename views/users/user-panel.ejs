@@ -14,11 +14,11 @@
                     <li class="list-group-item">Administrator account</li>
                     <% } else {} %>
                     <li class="list-group-item">Can <% if (!user.canAddReviews) { %>
-                     not
-                    <% } %> add reviews.</li>
+                        not
+                        <% } %> add reviews.</li>
                     <li class="list-group-item">Can <% if (!user.canAddCampgrounds) { %>
                         not
-                       <% } %> add campgrounds.</li>
+                        <% } %> add campgrounds.</li>
                     <li class="list-group-item">
                         <a href="/users/<%= user._id %>/edit" class="btn btn-warning">Edit account</a>
                     </li>
@@ -30,8 +30,10 @@
                 </ul>
             </div>
         </div>
+    </div>
+    <div class="row">
         <% if (campgrounds.length>0) { %>
-        <div class="col-md-4" style="max-height:800px; overflow:scroll">
+        <div class="col-md-6" style="max-height:800px; overflow:scroll">
             <h2>Campgrounds</h2>
             <% for( let campground of campgrounds ) { %>
             <div class="card" style="width:100%">
@@ -49,21 +51,20 @@
         </div>
         <% } %>
         <% if (reviews.length>0) { %>
-            <div class="col-md-5" style="min-height:0;max-height:800px; overflow:scroll">
-                <h2>Reviews</h2>
-                <% for( let review of reviews ) { %>
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title"><a href="/campgrounds/<%= review.campground._id %>"><%= review.campground.title %></a></h5>
-                        <p class="card-text"><%= review.body %> </p>
-                        <form class="mt-2" action="/campgrounds/<%= review.campground._id %>/reviews/<%= review._id %>/user?_method=DELETE" method=POST onsubmit="">
-                            <button type="submit" class="btn btn-danger btn-sm">Remove this review</button>
-                        </form>
-                    </div>
+        <div class="col-md-6" style="min-height:0;max-height:800px; overflow:scroll">
+            <h2>Reviews</h2>
+            <% for( let review of reviews ) { %>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><a href="/campgrounds/<%= review.campground._id %>"><%= review.campground.title %></a></h5>
+                    <p class="card-text"><%= review.body %> </p>
+                    <form class="mt-2" action="/campgrounds/<%= review.campground._id %>/reviews/<%= review._id %>/user?_method=DELETE" method=POST onsubmit="">
+                        <button type="submit" class="btn btn-danger btn-sm">Remove this review</button>
+                    </form>
                 </div>
-                <% } %>
             </div>
             <% } %>
-
+        </div>
+        <% } %>
     </div>
 </div>
