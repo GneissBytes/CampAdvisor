@@ -17,7 +17,7 @@ router.route('/users/:_id')
     //     res.send(await User.findById(_id))
     // })
     .get(isLoggedIn, wrapAsync(isAuthorizedUser), wrapAsync(users.viewUser))
-    .put(isLoggedIn, wrapAsync(isAuthorizedUser), wrapAsync(users.changeUser))
+    .put(isLoggedIn, wrapAsync(isAuthorizedUser), wrapAsync(users.changeUser), wrapAsync(users.logout))
     .delete(isLoggedIn, wrapAsync(isAuthorizedUser), wrapAsync(users.deleteUser), wrapAsync(users.logout))
 
 router.route('/users/:_id/edit')

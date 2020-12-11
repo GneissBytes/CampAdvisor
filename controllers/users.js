@@ -70,7 +70,7 @@ module.exports.deleteUser = async (req, res, next) => {
 
 }
 
-module.exports.changeUser = async (req, res) => {
+module.exports.changeUser = async (req, res, next) => {
     const { _id } = req.params;
     const { username, email, new_password, old_password } = req.body;
     try {
@@ -81,7 +81,7 @@ module.exports.changeUser = async (req, res) => {
     } catch (err) {
         return new ExpressError(err.message, 403)
     }
-    res.redirect(`/login`)
+    next()
 }
 
 module.exports.getEditUser = async (req, res) => {
