@@ -2,27 +2,20 @@ const passport = require('passport')
 const User = require('../models/user')
 const Campgrounds = require('../models/campground')
 const Review = require('../models/review')
-const { boolean } = require('joi')
+const ExpressError = require('../utils/ExpressError')
 
 module.exports.getRegisterForm = (req, res) => {
     res.render('users/register', { title: 'User registration' })
 }
 
 module.exports.submitUser = async (req, res, next) => {
-    try {
-        const { email, username, password } = req.body.user
-        const registeredUser = await User.register(new User({ email, username }), password)
-        req.login(registeredUser, err => {
-            if (err) return next(err)
-            req.flash('success', 'Welcome to Yelp Camp')
-            res.redirect('/campgrounds')
-        })
-
-    } catch (e) {
-        if (e.keyPattern) e.message = 'A user with the given email is already registered'
-        req.flash('error', e.message)
-        res.redirect('/register')
-    };
+    const { email, username, password } = req.body.user
+    const registeredUser = await User.register(new User({ email, username }), password)
+    req.login(registeredUser, err => {
+        if (err) return next(err)
+        req.flash('success', 'Welcome to Yelp Camp')
+        res.redirect('/campgrounds')
+    })
 };
 
 module.exports.getLoginForm = (req, res) => {
@@ -80,12 +73,22 @@ module.exports.deleteUser = async (req, res, next) => {
 module.exports.changeUser = async (req, res) => {
     const { _id } = req.params;
     const { username, email, new_password, old_password } = req.body;
-    const user = await User.findByIdAndUpdate(_id, { $set: { username, email } }, { useFindAndModify: false })
-    if (new_password && old_password) {
-        await user.changePassword(old_password, new_password)
-        await user.save()
+    try {
+        if (new_password && old_password) {
+            await user.changePassword(old_password, new_password)
+            await user.save()
+        }
+    } catch (e) {
+        throw new ExpressError('Incorrect password', 403)
     }
-    res.redirect(`/users/${_id}`)
+    try {
+        const user = await User.findByIdAndUpdate(_id, { $set: { username, email } }, { useFindAndModify: false, runValidators: true })
+    } catch (e) {
+        throw new ExpressError('Username and email must be unique', 403)
+    }
+
+    res.redirect(`/login`)
+
 }
 
 module.exports.getEditUser = async (req, res) => {
@@ -107,10 +110,10 @@ module.exports.submitPrivlegeChanges = async (req, res) => {
     const user = await User.findByIdAndUpdate(_id, {
         $set: {
             isAdmin: isAdmin === 'true' ? true : false,
-            canAddReview: canAddReview === 'true' ? true : false, 
-            canAddCampground: canAddCampground === 'true'? true: false
+            canAddReview: canAddReview === 'true' ? true : false,
+            canAddCampground: canAddCampground === 'true' ? true : false
         }
-    }, {findUseAndModify: false});
+    }, { findUseAndModify: false });
     res.redirect("/admin")
 }
 

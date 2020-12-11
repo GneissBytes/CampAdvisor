@@ -6,6 +6,10 @@ const passportLocalMongoose = require('passport-local-mongoose');
 const { campgroundSchema } = require('../schemas');
 
 const userSchema = new Schema({
+    username: {
+        type: String,
+        unique: true
+    },
     email: {
         type: String,
         required: true,
@@ -26,12 +30,12 @@ const userSchema = new Schema({
 
 userSchema.plugin(passportLocalMongoose) // adds username, password, makes them unique and required, adds additional methods
 
-userSchema.post('findOneAndDelete', async function(user, next) {
+userSchema.post('findOneAndDelete', async function (user, next) {
     if (user) {
         let reviews = user.reviews;
         let campgrounds = user.campgrounds
-        await Review.deleteMany({_id: {$in: reviews}})
-        await Campground.deleteMany({_id: {$in: campgrounds}})
+        await Review.deleteMany({ _id: { $in: reviews } })
+        await Campground.deleteMany({ _id: { $in: campgrounds } })
     }
 })
 

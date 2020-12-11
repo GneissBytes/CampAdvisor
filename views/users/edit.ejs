@@ -18,15 +18,19 @@
                             <div class="valid-feedback">Email accepted!</div>
                             <div class="invalid-feedback">Please enter email</div>
                         </div>
+                        <div class="form-check">
+                            <input class="form-check-input position-static" type="checkbox" name="toggle-password" id="toggle-password" aria-label="...">
+                            <label for="toggle-password" class="form-label">Change password</label>
+                        </div>
                         <div class="form-group">
                             <label for="old_password" class="form-label">Old password</label>
-                            <input type="password" name="old_password" class="form-control" placeholder="Leave empty if you dont want to change password">
+                            <input type="password" name="old_password" class="form-control" placeholder="Current password" disabled>
                             <div class="valid-feedback">Password accepted!</div>
                             <div class="invalid-feedback">Please enter password</div>
                         </div>
                         <div class="form-group">
                             <label for="new_password" class="form-label">New password</label>
-                            <input type="password" name="new_password" class="form-control" placeholder="Leave empty if you dont want to change password">
+                            <input type="password" name="new_password" class="form-control" placeholder="New password" disabled>
                             <div class="valid-feedback">Password accepted!</div>
                             <div class="invalid-feedback">Please enter password</div>
                         </div>
@@ -42,3 +46,12 @@
 </div>
 
 <script src="/js/formValidation.js"></script>
+<script>
+    const passwordFields = document.querySelectorAll('input[type="password"')
+    const togglePassword = document.querySelector('#toggle-password')
+    togglePassword.addEventListener('change',()=> {
+        for (let toggle of passwordFields) {
+            toggle.disabled = !toggle.disabled
+        };
+    })
+</script>

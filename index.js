@@ -1,5 +1,4 @@
 if (process.env.NODE_ENV !== "production") require('dotenv').config()
-
 //#region requires
 const mongoose = require('mongoose');
 const express = require('express');
@@ -86,6 +85,8 @@ passport.use(new LocalStrategy(User.authenticate())) //use LocalStratego, wtih a
 
 passport.serializeUser(User.serializeUser()) //serialize user using user
 passport.deserializeUser(User.deserializeUser()) //same as above for deserializing
+
+
 
 // send flash messages to all responds
 app.use((req, res, next) => {
