@@ -21,7 +21,7 @@ const { scriptSrcUrls, styleSrcUrls, connectSrcUrls, fontSrcUlrs } = require('./
 //#endregion 
 const app = express();
 
-// const dbUrl = 'mongodb://localhost:27017/yelp-camp' //local
+const secret = process.env.SECRET || 'thisisnotasecret'
 const dbUrl = process.env.MONGODB_URL //remote
 mongoose.connect(dbUrl, {
     useNewUrlParser: true,
@@ -55,7 +55,7 @@ app.use(express.json()) // recognize incoming request objects as jsons
 
 const store = new MongoStore({
     url: dbUrl,
-    secret: 'thisisnotasecret',
+    secret: secret,
     touchAfter: 24 * 3600 //reseave after 1 day
 });
 
@@ -66,7 +66,7 @@ store.on("error", function(error) {
 const sessionCongif = {
     store,
     name: 'session',
-    secret: 'thisisnotasecret',
+    secret: secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
