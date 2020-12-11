@@ -78,14 +78,10 @@ module.exports.changeUser = async (req, res) => {
         if (new_password && old_password) {
             await user.changePassword(old_password, new_password)
         }
-    } catch(err) {
+    } catch (err) {
         return new ExpressError(err.message, 403)
     }
-    }
-
-
-res.redirect(`/login`)
-
+    res.redirect(`/login`)
 }
 
 module.exports.getEditUser = async (req, res) => {
