@@ -43,15 +43,17 @@ const campgroundSchema = new Schema({
         }]
 }, opts)
 
-campgroundSchema.virtual('toMapBox').get(function() {
-    return {title: this.title, location:this.location, price: this.price, geometry:this.geometry}
-})
+
 
 campgroundSchema.virtual('properties.popUpMarkup').get(function () {
     return `
     <strong><a href="/campgrounds/${this._id}">${this.title}</a></strong>
     <p class="mt-0 mb-0">${this.location}</p>
     <p class="mb-0">$${this.price}/day</p>`
+})
+
+campgroundSchema.virtual('toMapBox').get(function() {
+    return {title: this.title, location:this.location, price: this.price, geometry:this.geometry, properties: {popUpMarkup: this.properties.popUpMarkup}}
 })
 
 campgroundSchema.post('findOneAndRemove', async function (campground, next) {
