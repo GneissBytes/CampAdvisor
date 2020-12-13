@@ -10,7 +10,7 @@ module.exports.getRegisterForm = (req, res) => {
 
 module.exports.submitUser = async (req, res, next) => {
     const { email, username, password } = req.body.user
-    const registeredUser = await User.register(new User({ email, username }), password)
+    const registeredUser = await User.register(new User({ email, username, isAdmin: false, canAddCampground: false, canAddReview: false }), password)
     req.login(registeredUser, err => {
         if (err) return next(err)
         req.flash('success', 'Welcome to CampAdvisor')
