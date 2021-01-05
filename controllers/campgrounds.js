@@ -6,11 +6,7 @@ const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding")
 const accessToken = process.env.MAPBOX_TOKEN
 const geocoder = mbxGeocoding({ accessToken })
 const countSufix = require('../utils/countSufixer')
-    // module.exports.index = async (req, res) => {
-    //     const campgrounds = await Campground.find({});
-    //     if (!campgrounds) throw new ExpressError('No camps found', 503)
-    //     res.render('campgrounds/index', { campgrounds, title: "All campgrounds" })
-    // };
+
 
 
 module.exports.index = async(req, res) => {

@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const { wrapAsync, grabPrevious, isLoggedIn, isAuthorizedUser, isAdmin, } = require('../middleware')
 const users = require('../controllers/users')
-const User = require('../models/user')
 
 router.route('/login')
     .get(users.getLoginForm)
